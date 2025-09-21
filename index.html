@@ -1,98 +1,147 @@
-<!DOCTYPE html>
+
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Murphy Collins | AI Engineer & Software Professional</title>
-  <style>
-    body {font-family: Arial, sans-serif; margin: 0; padding: 0; line-height: 1.6;}
-    header {background: #222; color: #fff; padding: 2rem; text-align: center;}
-    nav a {color: #fff; margin: 0 1rem; text-decoration: none;}
-    section {padding: 2rem; max-width: 900px; margin: auto;}
-    h1, h2 {color: #222;}
-    .projects div {margin-bottom: 1.2rem; border-bottom: 1px solid #ccc; padding-bottom: 1rem;}
-    footer {background: #222; color: #fff; text-align: center; padding: 1rem;}
-    footer a {color: #0af;}
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Murphy Collins — AI Chatbot</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0f1724;--card:#0b1220;--muted:#94a3b8;--accent:#06b6d4;--glass: rgba(255,255,255,0.04);}
+  html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial}
+  body{background:linear-gradient(180deg,#071029 0%, #081a2a 60%);color:#e6eef6;display:flex;align-items:center;justify-content:center;padding:24px}
+  .container{width:100%;max-width:980px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));box-shadow:0 10px 30px rgba(2,6,23,0.7);border-radius:14px;overflow:hidden;display:grid;grid-template-columns:360px 1fr}
+  .sidebar{padding:24px;background:var(--card);min-height:480px}
+  .profile{display:flex;gap:12px;align-items:center}
+  .avatar{width:64px;height:64px;border-radius:14px;background:linear-gradient(135deg,var(--accent),#60a5fa);display:flex;align-items:center;justify-content:center;font-weight:700;color:#052;box-shadow:0 6px 20px rgba(6,182,212,0.12)}
+  h1{margin:0;font-size:18px}
+  .meta{color:var(--muted);font-size:13px;margin-top:6px}
+  .projects-list{margin-top:18px}
+  .project-link{display:block;padding:10px;border-radius:10px;background:var(--glass);margin-bottom:10px;text-decoration:none;color:inherit}
+  .chat-area{padding:18px;display:flex;flex-direction:column;gap:12px}
+  .messages{flex:1;overflow:auto;padding:12px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.02))}
+  .composer{display:flex;gap:8px;align-items:center}
+  .input{flex:1;padding:12px;border-radius:999px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit;outline:none}
+  .btn{padding:10px 14px;border-radius:10px;background:linear-gradient(90deg,var(--accent),#7c3aed);border:none;color:#022;cursor:pointer;font-weight:600}
+  .bubble{display:inline-block;padding:10px 14px;border-radius:12px;max-width:70%;margin-bottom:8px;line-height:1.4}
+  .user{align-self:flex-end;background:linear-gradient(90deg,#073b4c,#0ea5a1);color:#001; border-radius:14px 14px 6px 14px}
+  .bot{align-self:flex-start;background:linear-gradient(90deg,#0f1724,#0b1220);border:1px solid rgba(255,255,255,0.03)}
+  .meta-small{font-size:12px;color:var(--muted);margin-top:6px}
+  .typing{height:14px;margin-left:6px;display:inline-block;vertical-align:middle}
+  .dot{display:inline-block;width:6px;height:6px;background:#9bd;border-radius:50%;margin-right:4px;animation:blink 1s infinite}
+  @keyframes blink{0%{opacity:0.2}50%{opacity:1}100%{opacity:0.2}}
+  .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:10px;border-radius:10px;margin-bottom:8px}
+  a.small-link{color:var(--accent);text-decoration:none;font-weight:600}
+  /* mobile responsiveness */
+  @media(max-width:880px){.container{grid-template-columns:1fr;}}
+</style>
 </head>
 <body>
-  <header>
-    <h1>Murphy Collins</h1>
-    <p>AI Engineer | Software Engineer | Full Stack Developer | Data Scientist</p>
-    <nav>
-      <a href="#about">About</a>
-      <a href="#projects">Projects</a>
-      <a href="#contact">Contact</a>
-    </nav>
-  </header>
+  <div class="container" role="main">
+    <aside class="sidebar">
+      <div class="profile">
+        <div class="avatar">MC</div>
+        <div>
+          <h1>Murphy Collins</h1>
+          <div class="meta">AI Engineer · Software Engineer · Full Stack Developer</div>
+        </div>
+      </div>
 
-  <section id="about">
-    <h2>About Me</h2>
-    <p>
-      Versatile and innovative technology professional with 6+ years of experience spanning 
-      data analytics, software engineering, and AI-driven solutions. Skilled at designing and 
-      deploying full-stack applications, intelligent systems, and enterprise architectures.
-    </p>
-  </section>
+      <div class="projects-list">
+        <h3 style="margin-top:14px;margin-bottom:8px;color:#cfeff6">Live Demos</h3>
+        <a class="project-link" href="https://ai-chatbot-energy.onrender.com" target="_blank">AI Chatbot (live)</a>
+        <a class="project-link" href="https://murphycollins.github.io" target="_blank">Portfolio (master)</a>
+        <!-- add more links dynamically -->
+      </div>
 
-  <section id="projects" class="projects">
-<section id="projects" class="projects">
-  <h2>Selected Projects</h2>
-  
-  <div>
-  <h3>
-    <a href="https://ai-chatbot-energy.onrender.com" target="_blank">
-      AI Chatbot for Energy Support
-    </a>
-  </h3>
-  <p>
-    Built with Python, Flask, and simple ML intents. 
-    Try it live here: 
-    <a href="https://ai-chatbot-energy.onrender.com" target="_blank">
-      Click to open chatbot
-    </a>.
-  </p>
-</div>
+      <div style="margin-top:18px" class="card">
+        <strong>Tip</strong>
+        <div class="meta-small">Ask the bot for project code, deployment instructions, or a short technical summary for recruiters.</div>
+      </div>
+    </aside>
 
-  
-  <div>
-    <h3><a href="https://github.com/murphycollins/java-inventory-system" target="_blank">Java Inventory Management System</a></h3>
-    <p>Spring Boot + MySQL application for managing stock, sales, and reporting.</p>
+    <section class="chat-area" aria-live="polite">
+      <div class="messages" id="messages" aria-label="Chat messages">
+        <div class="card bot" style="display:block">
+          <div class="bubble bot">Hi — I’m Murphy’s assistant. Ask me about projects, code, deployment, or AI.</div>
+        </div>
+      </div>
+
+      <div class="composer">
+        <input id="input" class="input" placeholder="Ask about deployments, ML models, or show me sample code..." />
+        <button id="send" class="btn">Send</button>
+      </div>
+      <div style="font-size:12px;color:var(--muted);margin-top:6px">© 2025 Murphy Collins · <a class="small-link" href="https://github.com/murphycollins" target="_blank">github.com/murphycollins</a></div>
+    </section>
   </div>
-  
-  <div>
-    <h3><a href="https://github.com/murphycollins/fullstack-ecommerce" target="_blank">Full Stack E-Commerce Platform</a></h3>
-    <p>React front-end, Node.js back-end, integrated payment API, deployed on AWS.</p>
-  </div>
-  
-  <div>
-    <h3><a href="https://github.com/murphycollins/churn-prediction" target="_blank">Customer Churn Prediction (ML)</a></h3>
-    <p>Python ML models (Random Forest, XGBoost) predicting churn with 85% accuracy. Includes Jupyter notebooks.</p>
-  </div>
-  
-  <div>
-    <h3><a href="https://github.com/murphycollins/uiux-dashboard" target="_blank">UI/UX Dashboard Prototype</a></h3>
-    <p>Designed in Figma and implemented with React + Chart.js for real-time insights.</p>
-  </div>
-  
-  <div>
-    <h3><a href="https://github.com/murphycollins/python-etl-pipeline" target="_blank">Python ETL Data Pipeline</a></h3>
-    <p>Automated data extraction, transformation, and loading using Python, SQL, and pandas.</p>
-  </div>
-  
-</section>
 
+<script>
+const messagesEl = document.getElementById('messages');
+const inputEl = document.getElementById('input');
+const sendBtn = document.getElementById('send');
 
-  <section id="contact">
-    <h2>Contact</h2>
-    <p>Email: <a href="mailto:murphycollins@my.uopeople.edu">murphycollins@my.uopeople.edu</a></p>
-    <p>GitHub: <a href="https://github.com/murphycollins" target="_blank">github.com/murphycollins</a></p>
-    <p>Portfolio: <a href="https://murphycollins.github.io" target="_blank">murphycollins.github.io</a></p>
-  </section>
+function appendMessage(text, who='bot') {
+  const wrapper = document.createElement('div');
+  wrapper.className = 'card ' + (who==='user' ? 'user' : 'bot');
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble ' + (who==='user' ? 'user' : 'bot');
+  bubble.innerHTML = text;
+  wrapper.appendChild(bubble);
+  messagesEl.appendChild(wrapper);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+}
 
-  <footer>
-    <p>© 2025 Murphy Collins | Powered by GitHub Pages</p>
-  </footer>
+function showTyping() {
+  const t = document.createElement('div');
+  t.className = 'card bot typing';
+  t.id = 'typingIndicator';
+  t.innerHTML = '<div class="bubble bot"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>';
+  messagesEl.appendChild(t);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
+function removeTyping() {
+  const el = document.getElementById('typingIndicator');
+  if (el) el.remove();
+}
+
+sendBtn.onclick = send;
+inputEl.addEventListener('keydown', (e) => { if (e.key === 'Enter') send(); });
+
+async function send(){
+  const text = inputEl.value.trim();
+  if(!text) return;
+  appendMessage(text, 'user');
+  inputEl.value = '';
+  showTyping();
+
+  try {
+    const res = await fetch('/api/respond', {
+      method:'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({message:text})
+    });
+    const data = await res.json();
+    removeTyping();
+    // if response contains markdown or code markers, render safely (basic)
+    const reply = sanitize(data.reply || '');
+    appendMessage(reply, 'bot');
+  } catch(err) {
+    removeTyping();
+    appendMessage('Sorry — connection error. Try again.', 'bot');
+  }
+}
+
+function sanitize(input) {
+  // Very simple sanitization for demo; for production use a robust sanitizer.
+  return input
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/\\n/g,'<br/>')
+    .replace(/`([^`]+)`/g,'<code>$1</code>');
+}
+</script>
 </body>
 </html>
 

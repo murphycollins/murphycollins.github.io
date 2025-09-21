@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>AI Chatbot — Energy Support</title>
+</head>
+<body>
+  <h1>Energy Support Chatbot (Demo)</h1>
+  <div id="chatbox" style="border:1px solid #ccc; padding:10px; width:300px; height:200px; overflow-y:auto;"></div>
+  <input id="input" placeholder="Ask about outages, billing..." />
+  <button id="send">Send</button>
+
+<script>
+const chat = document.getElementById("chatbox");
+const input = document.getElementById("input");
+document.getElementById("send").onclick = async () => {
+  const msg = input.value;
+  if(!msg) return;
+  chat.innerHTML += `<div><b>You:</b> ${msg}</div>`;
+  input.value = "";
+  const res = await fetch("/api/respond", {
+    method: "POST",
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({message: msg})
+  });
+  const data = await res.json();
+  chat.innerHTML += `<div><b>Bot:</b> ${data.reply}</div>`;
+};
+</script>
+</body>
+</html>
+
+Add templates/index.html

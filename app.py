@@ -43,14 +43,3 @@ def respond():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
-    intent = predict_intent(message)
-    if intent != "unknown":
-        reply = random.choice(RESPONSES[intent])
-    else:
-        reply = "Sorry, I didn't understand. Can you rephrase?"
-    return jsonify({"reply": reply})
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
-
-

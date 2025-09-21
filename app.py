@@ -38,39 +38,36 @@ def predict_intent_local(message):
     return None
 
 # ========== OpenAI Chat wrapper (if key provided) ==========
-OPENAI_KEY = os.environ.get("OPENAI_API_KEY")  # set this on Render / env
-USE_OPENAI = bool(OPENAI_KEY)
+# --- Debug-friendly OpenAI init (paste into app.py, replacing old block) ---
+OPENAI_KEY = os.environ.get("OPENAI_API_KEY")
+USE_OPENAI = False
+openai_error_msg = None
 
-if USE_OPENAI:
+if OPENAI_KEY:
     try:
         import openai
         openai.api_key = OPENAI_KEY
-    except Exception:
-        USE_OPENAI = False
-
-def ask_openai_chat(user_message, system_prompt=None):
-    """
-    Send a request to OpenAI ChatCompletion. Returns text reply.
-    """
-    if not USE_OPENAI:
-        return None
-    try:
-        messages = []
-        if system_prompt:
-            messages.append({"role": "system", "content": system_prompt})
-        messages.append({"role": "user", "content": user_message})
-        # Using gpt-3.5-turbo or gpt-4 if available — change as needed
-        response = openai.ChatCompletion.create(
-            model=os.environ.get("OPENAI_MODEL", "gpt-3.5-turbo"),
-            messages=messages,
-            max_tokens=450,
-            temperature=0.2,
-        )
-        text = response.choices[0].message.content.strip()
-        return text
+        # quick test call to verify at startup (non-blocking in production, but okay for debug)
+        try:
+            openai.Engine.list()  # small call to verify key works; will raise if invalid
+            USE_OPENAI = True
+        except Exception as e:
+            openai_error_msg = f"OpenAI test call failed: {e!r}"
+            USE_OPENAI = False
     except Exception as e:
-        # In production, log details to a logging service
-        return None
+        openai_error_msg = f"OpenAI import failed: {e!r}"
+        USE_OPENAI = False
+else:
+    openai_error_msg = "OPENAI_API_KEY not set in environment."
+
+# Expose status for logs
+print("===== OpenAI DEBUG STATUS =====")
+print("OPENAI_KEY_PRESENT:", bool(OPENAI_KEY))
+print("USE_OPENAI:", USE_OPENAI)
+if openai_error_msg:
+    print("OPENAI_ERROR_MSG:", openai_error_msg)
+print("================================")
+
 
 # Optional: an informative system prompt to make the bot professional and recruiter-friendly
 SYSTEM_PROMPT = """You are an expert technical assistant for a software engineer named Murphy Collins.

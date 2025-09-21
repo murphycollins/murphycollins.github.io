@@ -6,28 +6,94 @@
   <title>Murphy Collins | Master Portfolio</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    html {
-      scroll-behavior: smooth;
+    html { scroll-behavior: smooth; }
+    body { overflow-x: hidden; }
+
+    .active-link { color: #14b8a6; font-weight: bold; }
+    .transparent { background: transparent; }
+    .solid { background: #1f2937; box-shadow: 0 2px 6px rgba(0,0,0,0.3); }
+
+    /* Gradient Branding */
+    .gradient-text {
+      background: linear-gradient(90deg, #14b8a6, #3b82f6, #14b8a6);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientShift 3s infinite linear;
     }
-    .active-link {
-      color: #14b8a6; /* teal-500 */
-      font-weight: bold;
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
-    .transparent {
-      background: transparent;
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.2); opacity: 0.7; }
     }
-    .solid {
-      background: #1f2937; /* gray-800 */
-      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+
+    /* Shimmer Animation for Titles */
+    .shimmer {
+      background: linear-gradient(
+        90deg,
+        #14b8a6,
+        #3b82f6,
+        #14b8a6,
+        #3b82f6
+      );
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shimmerMove 6s infinite linear;
     }
+    @keyframes shimmerMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Loader */
+    #loader {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: #111827; display: flex; justify-content: center; align-items: center;
+      z-index: 9999; flex-direction: column; font-family: 'Poppins', sans-serif;
+    }
+    #loader .gradient-text {
+      font-size: 3rem; font-weight: bold; letter-spacing: 2px;
+      animation: gradientShift 3s infinite linear, pulse 1.5s infinite;
+    }
+
+    /* Back to Top Button */
+    #backToTop {
+      position: fixed; bottom: 30px; right: 30px; background: #14b8a6;
+      color: white; padding: 12px 16px; border-radius: 50%; font-size: 20px;
+      cursor: pointer; display: none; box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      transition: opacity 0.4s, transform 0.3s; opacity: 0;
+    }
+    #backToTop.show { display: block; opacity: 1; animation: bounce 1.5s infinite; }
+    #backToTop:hover { background: #0d9488; }
+    @keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+
+    /* Fade-in Sections */
+    .fade-section { opacity: 0; transform: translateY(40px); transition: opacity 0.8s, transform 0.8s; }
+    .fade-section.show { opacity: 1; transform: translateY(0); }
+
+    /* Portfolio Card Hover Animation */
+    .card-hover { transition: transform 0.3s, box-shadow 0.3s; }
+    .card-hover:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(20, 184, 166, 0.4); }
   </style>
 </head>
 <body class="bg-gray-900 text-gray-100 font-sans">
 
+  <!-- Loader -->
+  <div id="loader">
+    <div class="gradient-text">MC</div>
+    <p class="text-gray-400 text-lg mt-4">Loading...</p>
+  </div>
+
   <!-- Header -->
-  <header id="navbar" class="transparent fixed w-full top-0 z-50 transition duration-300">
+  <header id="navbar" class="transparent fixed w-full top-0 z-50 transition duration-300" style="opacity:0;">
     <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-      <h1 class="text-2xl font-bold text-teal-400">Murphy Collins</h1>
+      <h1 class="text-2xl font-bold gradient-text">Murphy Collins</h1>
       <nav>
         <a href="#about" class="nav-link mx-3 hover:text-teal-400">About</a>
         <a href="#portfolio" class="nav-link mx-3 hover:text-teal-400">Portfolios</a>
@@ -37,7 +103,7 @@
   </header>
 
   <!-- Hero Section -->
-  <section class="bg-gray-900 text-center py-28">
+  <section class="bg-gray-900 text-center py-28 fade-section">
     <h2 class="text-4xl md:text-5xl font-bold mb-4">Welcome to My Portfolio</h2>
     <p class="text-lg text-gray-400">Explore my work across multiple domains in tech</p>
     <a href="#portfolio" class="mt-6 inline-block bg-teal-500 hover:bg-teal-600 text-white font-semibold px-6 py-3 rounded-lg">
@@ -46,8 +112,8 @@
   </section>
 
   <!-- About Section -->
-  <section id="about" class="max-w-6xl mx-auto px-4 py-24">
-    <h2 class="text-3xl font-bold text-teal-400 mb-6">About Me</h2>
+  <section id="about" class="max-w-6xl mx-auto px-4 py-24 fade-section">
+    <h2 class="text-3xl font-bold shimmer mb-6">About Me</h2>
     <p class="text-gray-300 leading-relaxed">
       I am Murphy Collins, a versatile technology professional with expertise spanning software 
       engineering, AI/ML, data analysis, and full-stack development.  
@@ -56,57 +122,57 @@
     </p>
   </section>
 
-  <!-- Portfolio Links -->
-  <section id="portfolio" class="max-w-6xl mx-auto px-4 py-24">
-    <h2 class="text-3xl font-bold text-teal-400 mb-6">Explore My Specialized Portfolios</h2>
+  <!-- Portfolio Section -->
+  <section id="portfolio" class="max-w-6xl mx-auto px-4 py-24 fade-section">
+    <h2 class="text-3xl font-bold shimmer mb-6">Explore My Specialized Portfolios</h2>
     <p class="text-gray-300 mb-8">Click a card to dive into my expertise areas.</p>
 
     <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-      <a href="python-developer/" class="block bg-gray-800 p-6 rounded-lg shadow hover:bg-gray-700 transition">
+      <a href="python-developer/" class="card-hover block bg-gray-800 p-6 rounded-lg shadow">
         <h3 class="text-xl font-semibold text-white">🐍 Python Developer</h3>
         <p class="text-gray-400 mt-2">Advanced Python apps, automation, and backend solutions.</p>
       </a>
-      <a href="java-developer/" class="block bg-gray-800 p-6 rounded-lg shadow hover:bg-gray-700 transition">
+      <a href="java-developer/" class="card-hover block bg-gray-800 p-6 rounded-lg shadow">
         <h3 class="text-xl font-semibold text-white">☕ Java Developer</h3>
         <p class="text-gray-400 mt-2">Enterprise-level applications and object-oriented design.</p>
       </a>
-      <a href="frontend-developer/" class="block bg-gray-800 p-6 rounded-lg shadow hover:bg-gray-700 transition">
+      <a href="frontend-developer/" class="card-hover block bg-gray-800 p-6 rounded-lg shadow">
         <h3 class="text-xl font-semibold text-white">🎨 Frontend Developer</h3>
         <p class="text-gray-400 mt-2">Responsive and interactive web interfaces.</p>
       </a>
-      <a href="backend-developer/" class="block bg-gray-800 p-6 rounded-lg shadow hover:bg-gray-700 transition">
+      <a href="backend-developer/" class="card-hover block bg-gray-800 p-6 rounded-lg shadow">
         <h3 class="text-xl font-semibold text-white">⚙️ Backend Developer</h3>
         <p class="text-gray-400 mt-2">APIs, databases, and server-side systems.</p>
       </a>
-      <a href="ui-ux-developer/" class="block bg-gray-800 p-6 rounded-lg shadow hover:bg-gray-700 transition">
+      <a href="ui-ux-developer/" class="card-hover block bg-gray-800 p-6 rounded-lg shadow">
         <h3 class="text-xl font-semibold text-white">🎯 UI/UX Developer</h3>
         <p class="text-gray-400 mt-2">User-centered design and engaging digital experiences.</p>
       </a>
-      <a href="full-stack-developer/" class="block bg-gray-800 p-6 rounded-lg shadow hover:bg-gray-700 transition">
+      <a href="full-stack-developer/" class="card-hover block bg-gray-800 p-6 rounded-lg shadow">
         <h3 class="text-xl font-semibold text-white">🖥️ Full Stack Developer</h3>
         <p class="text-gray-400 mt-2">Complete end-to-end web solutions.</p>
       </a>
-      <a href="software-engineer/" class="block bg-gray-800 p-6 rounded-lg shadow hover:bg-gray-700 transition">
+      <a href="software-engineer/" class="card-hover block bg-gray-800 p-6 rounded-lg shadow">
         <h3 class="text-xl font-semibold text-white">💻 Software Engineer</h3>
         <p class="text-gray-400 mt-2">Robust and scalable software development.</p>
       </a>
-      <a href="data-scientist/" class="block bg-gray-800 p-6 rounded-lg shadow hover:bg-gray-700 transition">
+      <a href="data-scientist/" class="card-hover block bg-gray-800 p-6 rounded-lg shadow">
         <h3 class="text-xl font-semibold text-white">📊 Data Scientist</h3>
         <p class="text-gray-400 mt-2">Predictive analytics and machine learning.</p>
       </a>
-      <a href="data-analyst/" class="block bg-gray-800 p-6 rounded-lg shadow hover:bg-gray-700 transition">
+      <a href="data-analyst/" class="card-hover block bg-gray-800 p-6 rounded-lg shadow">
         <h3 class="text-xl font-semibold text-white">📈 Data Analyst</h3>
         <p class="text-gray-400 mt-2">Dashboards, KPIs, and actionable insights.</p>
       </a>
-      <a href="machine-learning-engineer/" class="block bg-gray-800 p-6 rounded-lg shadow hover:bg-gray-700 transition">
+      <a href="machine-learning-engineer/" class="card-hover block bg-gray-800 p-6 rounded-lg shadow">
         <h3 class="text-xl font-semibold text-white">🤖 Machine Learning Engineer</h3>
         <p class="text-gray-400 mt-2">Model training, optimization, and deployment.</p>
       </a>
-      <a href="ai-engineer/" class="block bg-gray-800 p-6 rounded-lg shadow hover:bg-gray-700 transition">
+      <a href="ai-engineer/" class="card-hover block bg-gray-800 p-6 rounded-lg shadow">
         <h3 class="text-xl font-semibold text-white">🧠 AI Engineer</h3>
         <p class="text-gray-400 mt-2">Intelligent AI systems and NLP applications.</p>
       </a>
-      <a href="software-architect/" class="block bg-gray-800 p-6 rounded-lg shadow hover:bg-gray-700 transition">
+      <a href="software-architect/" class="card-hover block bg-gray-800 p-6 rounded-lg shadow">
         <h3 class="text-xl font-semibold text-white">🏗️ Software Architect</h3>
         <p class="text-gray-400 mt-2">System design and enterprise architecture.</p>
       </a>
@@ -114,9 +180,9 @@
   </section>
 
   <!-- Contact -->
-  <section id="contact" class="bg-gray-800 py-24">
+  <section id="contact" class="bg-gray-800 py-24 fade-section">
     <div class="max-w-6xl mx-auto px-4 text-center">
-      <h2 class="text-3xl font-bold text-teal-400 mb-6">Get in Touch</h2>
+      <h2 class="text-3xl font-bold shimmer mb-6">Get in Touch</h2>
       <p class="text-gray-400 mb-4">Feel free to connect with me for collaboration or opportunities.</p>
       <p>Email: <a href="mailto:your-email@example.com" class="text-teal-400 hover:underline">your-email@example.com</a></p>
       <p>GitHub: <a href="https://github.com/murphycollins" class="text-teal-400 hover:underline">github.com/murphycollins</a></p>
@@ -125,24 +191,27 @@
   </section>
 
   <!-- Footer -->
-  <footer class="bg-gray-900 text-center py-6 text-gray-500">
-    © 2025 Murphy Collins. All rights reserved.
+  <footer class="bg-gray-900 text-center py-6 fade-section">
+    <span class="text-gray-500">© 2025 <span class="gradient-text">Murphy Collins</span>. All rights reserved.</span>
   </footer>
 
-  <!-- ScrollSpy + Navbar Scroll Script -->
+  <!-- Back to Top Button -->
+  <button id="backToTop" onclick="window.scrollTo({top:0, behavior:'smooth'});">↑</button>
+
+  <!-- Scripts -->
   <script>
     const sections = document.querySelectorAll("section");
     const navLinks = document.querySelectorAll(".nav-link");
     const navbar = document.getElementById("navbar");
+    const backToTop = document.getElementById("backToTop");
+    const fadeSections = document.querySelectorAll(".fade-section");
+    const loader = document.getElementById("loader");
 
     window.addEventListener("scroll", () => {
-      // Highlight active section
       let current = "";
       sections.forEach((section) => {
         const sectionTop = section.offsetTop - 100;
-        if (scrollY >= sectionTop) {
-          current = section.getAttribute("id");
-        }
+        if (scrollY >= sectionTop) { current = section.getAttribute("id"); }
       });
 
       navLinks.forEach((link) => {
@@ -152,7 +221,6 @@
         }
       });
 
-      // Navbar style toggle
       if (window.scrollY > 50) {
         navbar.classList.remove("transparent");
         navbar.classList.add("solid");
@@ -160,6 +228,25 @@
         navbar.classList.remove("solid");
         navbar.classList.add("transparent");
       }
+
+      if (window.scrollY > 300) {
+        backToTop.classList.add("show");
+      } else {
+        backToTop.classList.remove("show");
+      }
+
+      fadeSections.forEach((sec) => {
+        const rect = sec.getBoundingClientRect();
+        if (rect.top < window.innerHeight - 100) { sec.classList.add("show"); }
+      });
+    });
+
+    window.addEventListener("load", () => {
+      loader.style.opacity = "0";
+      setTimeout(() => {
+        loader.style.display = "none";
+        document.getElementById("navbar").style.opacity = "1";
+      }, 600);
     });
   </script>
 

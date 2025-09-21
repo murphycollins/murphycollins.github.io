@@ -1,6 +1,0 @@
-Flask==2.2.5
-gunicorn
-openai
-flask-cors
-python-dotenv
-requests

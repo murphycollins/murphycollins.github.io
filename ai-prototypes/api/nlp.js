@@ -2,24 +2,45 @@ import OpenAI from "openai";
 
 const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-export default async function handler(req, res) {
-  if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
+export async function handler(event, context) {
+  if (event.httpMethod !== "POST") {
+    return {
+      statusCode: 405,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ error: "Method not allowed" })
+    };
+  }
+
   try {
-    const { text, task } = req.body;
-    if (!text || !task) return res.status(400).json({ error: "Missing text or task" });
+    const { text, task } = JSON.parse(event.body || "{}");
+    if (!text || !task) {
+      return {
+        statusCode: 400,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ error: "Missing text or task" })
+      };
+    }
 
-    let prompt = task === "summarize" 
-      ? `Summarize the following text in 3-4 sentences:\n\n${text}`
-      : `Analyze the sentiment (positive, neutral, negative) of this text:\n\n${text}`;
+    const prompt =
+      task === "summarize"
+        ? `Summarize this text:\n\n${text}`
+        : `Analyze sentiment of this text:\n\n${text}`;
 
-    const completion = await client.chat.completions.create({
+    const response = await client.chat.completions.create({
       model: "gpt-4",
-      messages: [{ role: "user", content: prompt }],
-      max_tokens: 150
+      messages: [{ role: "user", content: prompt }]
     });
 
-    res.status(200).json({ result: completion.choices[0].message.content.trim() });
+    return {
+      statusCode: 200,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ result: response.choices[0].message.content })
+    };
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return {
+      statusCode: 500,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ error: err.message || "Internal server error" })
+    };
   }
 }

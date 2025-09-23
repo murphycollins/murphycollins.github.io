@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Murphy Collins | AI Prototypes</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { overflow-x: hidden; background: #0f1724; color: #e6eef8; font-family: Inter, sans-serif; }
+    .gradient-text { background: linear-gradient(90deg, #14b8a6, #3b82f6, #14b8a6); background-size: 200% 200%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: gradientShift 3s infinite linear; }
+    @keyframes gradientShift { 0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%} }
+    .card-hover { transition: transform 0.3s, box-shadow 0.3s; }
+    .card-hover:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(20,184,166,0.4); }
+    .fade-section { opacity:0; transform: translateY(40px); transition: opacity 0.8s, transform 0.8s; }
+    .fade-section.show { opacity:1; transform: translateY(0); }
+    button,input,select,textarea{background:#071024;border:1px solid rgba(255,255,255,0.04);color:inherit;padding:8px 10px;border-radius:8px;cursor:pointer}
+    canvas{width:100%;border-radius:8px;background:#020617}
+    #backToTop{position:fixed;bottom:30px;right:30px;background:#14b8a6;color:white;padding:12px 16px;border-radius:50%;font-size:20px;cursor:pointer;display:none;box-shadow:0 2px 6px rgba(0,0,0,0.3);transition:opacity 0.4s, transform 0.3s;opacity:0;}
+    #backToTop.show{display:block;opacity:1;animation:bounce 1.5s infinite;}
+    #backToTop:hover{background:#0d9488;}
+    @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="fixed w-full top-0 z-50 bg-gray-900 p-4 flex justify-between items-center">
+    <h1 class="text-2xl font-bold gradient-text">Murphy Collins</h1>
+    <nav>
+      <a href="#nlp" class="mx-2 hover:text-teal-400">NLP</a>
+      <a href="#cv" class="mx-2 hover:text-teal-400">Computer Vision</a>
+      <a href="#rl" class="mx-2 hover:text-teal-400">Reinforcement Learning</a>
+      <a href="#ai-img" class="mx-2 hover:text-teal-400">AI Images</a>
+    </nav>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 pt-28">
+
+    <!-- NLP Section -->
+    <section id="nlp" class="fade-section mb-16">
+      <h2 class="text-3xl font-bold gradient-text mb-4">🧠 NLP — Transformers & Fallback</h2>
+      <p class="mb-4 text-gray-400">Summarization & sentiment analysis using Hugging Face API or local fallback.</p>
+      <input id="hf-token" placeholder="Hugging Face API token (optional)" class="w-full mb-2"/>
+      <select id="hf-model" class="w-full mb-2">
+        <option value="facebook/bart-large-cnn">Summarization — BART</option>
+        <option value="distilbert-base-uncased-finetuned-sst-2-english">Sentiment — DistilBERT</option>
+      </select>
+      <textarea id="nlp-text" class="w-full mb-2 p-2 rounded" rows="4">Artificial intelligence is transforming technology with cutting-edge solutions...</textarea>
+      <div class="flex gap-2 mb-2">
+        <button id="hf-summarize">Summarize</button>
+        <button id="hf-sentiment">Sentiment</button>
+        <button id="hf-fallback">Fallback</button>
+      </div>
+      <div id="hf-result" class="p-2 rounded bg-gray-800">Result appears here</div>
+    </section>
+
+    <!-- Computer Vision Section -->
+    <section id="cv" class="fade-section mb-16">
+      <h2 class="text-3xl font-bold gradient-text mb-4">📷 Computer Vision — TFJS</h2>
+      <p class="mb-4 text-gray-400">Object detection & classification using TensorFlow.js models.</p>
+      <input type="file" id="img-upload" accept="image/*" class="mb-2"/>
+      <select id="cv-model" class="w-full mb-2">
+        <option value="coco-ssd">Coco-SSD (Detection)</option>
+        <option value="mobilenet">MobileNet (Classification)</option>
+      </select>
+      <canvas id="cv-canvas" height="360"></canvas>
+      <div id="cv-output" class="p-2 rounded bg-gray-800 mt-2">Upload image to see results. (Demo: <strong>cat.png</strong> or <strong>dog.png</strong>)</div>
+    </section>
+
+    <!-- Reinforcement Learning Section -->
+    <section id="rl" class="fade-section mb-16">
+      <h2 class="text-3xl font-bold gradient-text mb-4">🎮 Reinforcement Learning — Q-Learning Grid</h2>
+      <p class="mb-4 text-gray-400">Train an agent in a 6×6 grid with obstacles and see the training curve.</p>
+      <div class="flex gap-2 mb-2">
+        <button id="rl-train">Train</button>
+        <button id="rl-run">Run</button>
+        <button id="rl-reset">Reset</button>
+      </div>
+      <canvas id="rl-world" height="360"></canvas>
+      <canvas id="rl-plot" height="140" class="mt-2"></canvas>
+      <div id="rl-info" class="p-2 rounded bg-gray-800 mt-2">Episodes: 0 · Best steps: —</div>
+    </section>
+
+    <!-- AI Image Generation -->
+    <section id="ai-img" class="fade-section mb-16">
+      <h2 class="text-3xl font-bold gradient-text mb-4">🎨 AI Image Generation — DALL·E 3</h2>
+      <p class="mb-4 text-gray-400">Generate images from prompts using DALL·E 3 (replace `YOUR_API_KEY`).</p>
+      <textarea id="img-prompt" class="w-full mb-2 p-2 rounded" rows="3" placeholder="A futuristic city skyline at sunset"></textarea>
+      <button id="gen-img" class="mb-2">Generate Image</button>
+      <div id="img-output" class="mt-2 p-2 rounded bg-gray-800">
+        <img src="https://images.unsplash.com/photo-1557683316-973673baf926?auto=format&fit=crop&w=600&q=80" alt="Demo AI Image" style="width:100%;border-radius:8px;">
+      </div>
+    </section>
+
+  </main>
+
+  <button id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.12.0/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet"></script>
+
+  <script>
+    const fadeSections = document.querySelectorAll(".fade-section");
+    window.addEventListener("scroll", () => {
+      fadeSections.forEach(sec => {
+        if(sec.getBoundingClientRect().top < window.innerHeight - 100) sec.classList.add("show");
+      });
+      const backToTop = document.getElementById("backToTop");
+      if(window.scrollY>300) backToTop.classList.add("show"); else backToTop.classList.remove("show");
+    });
+
+    // NLP fallback demo
+    const hfResult = document.getElementById("hf-result");
+    document.getElementById('hf-fallback').addEventListener('click',()=>{
+      hfResult.innerHTML='<strong>Sentiment (demo):</strong> Positive<br><strong>Summary (demo):</strong> AI is transforming technology with cutting-edge solutions.';
+    });
+
+    // Reinforcement Learning demo
+    const rlWorld=document.getElementById('rl-world'), rlCtx=rlWorld.getContext('2d');
+    rlCtx.fillStyle='#0db8a6'; rlCtx.fillRect(0,0,60,60);
+  </script>
+
+</body>
+</html>

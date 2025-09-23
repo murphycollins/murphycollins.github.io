@@ -2,32 +2,41 @@ import OpenAI from "openai";
 
 const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
+export async function handler(event, context) {
+  if (event.httpMethod !== "POST") {
+    return {
+      statusCode: 405,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ error: "Method not allowed" })
+    };
   }
 
   try {
-    const { prompt } = req.body;
+    const { prompt } = JSON.parse(event.body || "{}");
     if (!prompt) {
-      return res.status(400).json({ error: "Missing prompt" });
+      return {
+        statusCode: 400,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ error: "Missing prompt" })
+      };
     }
 
     const response = await client.images.generate({
       model: "gpt-image-1",
       prompt,
-      size: "1024x1024",
+      size: "1024x1024"
     });
 
-    // Safety check
-    const imageUrl = response?.data?.[0]?.url;
-    if (!imageUrl) {
-      return res.status(500).json({ error: "No image URL returned from OpenAI" });
-    }
-
-    res.status(200).json({ url: imageUrl });
+    return {
+      statusCode: 200,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ url: response.data[0].url })
+    };
   } catch (err) {
-    console.error("Error generating image:", err);
-    res.status(500).json({ error: err.message || "Unknown server error" });
+    return {
+      statusCode: 500,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ error: err.message || "Internal server error" })
+    };
   }
 }

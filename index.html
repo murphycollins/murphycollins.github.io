@@ -1,254 +1,199 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Murphy Collins | Master Portfolio</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Prototypes — Murphy Collins</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    html { scroll-behavior: smooth; }
-    body { overflow-x: hidden; }
-
-    .active-link { color: #14b8a6; font-weight: bold; }
-    .transparent { background: transparent; }
-    .solid { background: #1f2937; box-shadow: 0 2px 6px rgba(0,0,0,0.3); }
-
-    /* Gradient Branding */
-    .gradient-text {
-      background: linear-gradient(90deg, #14b8a6, #3b82f6, #14b8a6);
-      background-size: 200% 200%;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: gradientShift 3s infinite linear;
-    }
-    @keyframes gradientShift {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.2); opacity: 0.7; }
-    }
-
-    /* Shimmer Animation for Titles */
-    .shimmer {
-      background: linear-gradient(
-        90deg,
-        #14b8a6,
-        #3b82f6,
-        #14b8a6,
-        #3b82f6
-      );
-      background-size: 300% 300%;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: shimmerMove 6s infinite linear;
-    }
-    @keyframes shimmerMove {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    /* Loader */
-    #loader {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: #111827; display: flex; justify-content: center; align-items: center;
-      z-index: 9999; flex-direction: column; font-family: 'Poppins', sans-serif;
-    }
-    #loader .gradient-text {
-      font-size: 3rem; font-weight: bold; letter-spacing: 2px;
-      animation: gradientShift 3s infinite linear, pulse 1.5s infinite;
-    }
-
-    /* Back to Top Button */
-    #backToTop {
-      position: fixed; bottom: 30px; right: 30px; background: #14b8a6;
-      color: white; padding: 12px 16px; border-radius: 50%; font-size: 20px;
-      cursor: pointer; display: none; box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-      transition: opacity 0.4s, transform 0.3s; opacity: 0;
-    }
-    #backToTop.show { display: block; opacity: 1; animation: bounce 1.5s infinite; }
-    #backToTop:hover { background: #0d9488; }
-    @keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
-
-    /* Fade-in Sections */
-    .fade-section { opacity: 0; transform: translateY(40px); transition: opacity 0.8s, transform 0.8s; }
-    .fade-section.show { opacity: 1; transform: translateY(0); }
-
-    /* Portfolio Card Hover Animation */
-    .card-hover { transition: transform 0.3s, box-shadow 0.3s; }
-    .card-hover:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(20, 184, 166, 0.4); }
+    body { background:#0f1724; color:#e6eef8; font-family:Inter,sans-serif; }
+    .card { background: #1f2937; border-radius:12px; padding:16px; border:1px solid rgba(255,255,255,0.06); }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:16px; margin-top:24px; }
+    button { background:#14b8a6; padding:8px 12px; border-radius:8px; margin-top:8px; }
+    input,textarea,select { width:100%; margin-top:4px; margin-bottom:8px; padding:8px; border-radius:6px; background:#0f1724; color:#e6eef8; border:1px solid rgba(255,255,255,0.1); }
+    canvas { width:100%; border-radius:8px; background:#020617; margin-top:8px; }
   </style>
 </head>
-<body class="bg-gray-900 text-gray-100 font-sans">
+<body class="p-6">
 
-  <!-- Loader -->
-  <div id="loader">
-    <div class="gradient-text">MC</div>
-    <p class="text-gray-400 text-lg mt-4">Loading...</p>
+  <h1 class="text-3xl font-bold mb-4 text-teal-400">AI Research & Prototypes</h1>
+  <p class="text-gray-400 mb-6">Fully functional AI demos — NLP, CV, RL, and Image Generation.</p>
+
+  <div class="grid">
+
+    <!-- NLP -->
+    <div class="card">
+      <h2 class="font-bold text-xl">NLP — Summarization & Sentiment</h2>
+      <textarea id="nlp-text" rows="4">Artificial intelligence researchers are releasing increasingly capable models.</textarea>
+      <div>
+        <button onclick="callNLP('summarize')">Summarize</button>
+        <button onclick="callNLP('sentiment')">Sentiment</button>
+      </div>
+      <div id="nlp-result" class="mt-2 text-gray-200"></div>
+    </div>
+
+    <!-- AI Image Generation -->
+    <div class="card">
+      <h2 class="font-bold text-xl">AI Image Generation</h2>
+      <textarea id="image-prompt" rows="2">A futuristic cityscape at sunset</textarea>
+      <button onclick="generateImage()">Generate Image</button>
+      <div class="mt-2"><img id="generated-img" class="rounded-lg" /></div>
+    </div>
+
+    <!-- TFJS CV -->
+    <div class="card">
+      <h2 class="font-bold text-xl">Computer Vision — TFJS</h2>
+      <input type="file" id="img-upload" accept="image/*"/>
+      <canvas id="cv-canvas" width="400" height="300"></canvas>
+      <div id="cv-output" class="mt-2 text-gray-200">Upload an image to run detection/classification.</div>
+    </div>
+
+    <!-- RL -->
+    <div class="card">
+      <h2 class="font-bold text-xl">Reinforcement Learning — Q-Learning</h2>
+      <button onclick="trainRL()">Train Agent</button>
+      <button onclick="runRL()">Run Policy</button>
+      <canvas id="rl-world" width="300" height="300"></canvas>
+      <canvas id="rl-plot" width="300" height="100" class="mt-2"></canvas>
+      <div id="rl-info" class="mt-2 text-gray-200">Episodes: 0</div>
+    </div>
+
   </div>
 
-  <!-- Header -->
-  <header id="navbar" class="transparent fixed w-full top-0 z-50 transition duration-300" style="opacity:0;">
-    <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-      <h1 class="text-2xl font-bold gradient-text">Murphy Collins</h1>
-      <nav>
-        <a href="#about" class="nav-link mx-3 hover:text-teal-400">About</a>
-        <a href="#portfolio" class="nav-link mx-3 hover:text-teal-400">Portfolios</a>
-        <a href="#contact" class="nav-link mx-3 hover:text-teal-400">Contact</a>
-      </nav>
-    </div>
-  </header>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.11.0/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet"></script>
 
-  <!-- Hero Section -->
-  <section class="bg-gray-900 text-center py-28 fade-section">
-    <h2 class="text-4xl md:text-5xl font-bold mb-4">Welcome to My Portfolio</h2>
-    <p class="text-lg text-gray-400">Explore my work across multiple domains in tech</p>
-    <a href="#portfolio" class="mt-6 inline-block bg-teal-500 hover:bg-teal-600 text-white font-semibold px-6 py-3 rounded-lg">
-      Explore Portfolios
-    </a>
-  </section>
-
-  <!-- About Section -->
-  <section id="about" class="max-w-6xl mx-auto px-4 py-24 fade-section">
-    <h2 class="text-3xl font-bold shimmer mb-6">About Me</h2>
-    <p class="text-gray-300 leading-relaxed">
-      I am Murphy Collins, a versatile technology professional with expertise spanning software 
-      engineering, AI/ML, data analysis, and full-stack development.  
-      My mission is to design and build intelligent, scalable, and impactful digital solutions 
-      that bridge business needs with cutting-edge technology.
-    </p>
-  </section>
-
-  <!-- Portfolio Section -->
-  <section id="portfolio" class="max-w-6xl mx-auto px-4 py-24 fade-section">
-    <h2 class="text-3xl font-bold shimmer mb-6">Explore My Specialized Portfolios</h2>
-    <p class="text-gray-300 mb-8">Click a card to dive into my expertise areas.</p>
-
-    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-      <a href="python-developer/" class="card-hover block bg-gray-800 p-6 rounded-lg shadow">
-        <h3 class="text-xl font-semibold text-white">🐍 Python Developer</h3>
-        <p class="text-gray-400 mt-2">Advanced Python apps, automation, and backend solutions.</p>
-      </a>
-      <a href="java-developer/" class="card-hover block bg-gray-800 p-6 rounded-lg shadow">
-        <h3 class="text-xl font-semibold text-white">☕ Java Developer</h3>
-        <p class="text-gray-400 mt-2">Enterprise-level applications and object-oriented design.</p>
-      </a>
-      <a href="frontend-developer/" class="card-hover block bg-gray-800 p-6 rounded-lg shadow">
-        <h3 class="text-xl font-semibold text-white">🎨 Frontend Developer</h3>
-        <p class="text-gray-400 mt-2">Responsive and interactive web interfaces.</p>
-      </a>
-      <a href="backend-developer/" class="card-hover block bg-gray-800 p-6 rounded-lg shadow">
-        <h3 class="text-xl font-semibold text-white">⚙️ Backend Developer</h3>
-        <p class="text-gray-400 mt-2">APIs, databases, and server-side systems.</p>
-      </a>
-      <a href="ui-ux-developer/" class="card-hover block bg-gray-800 p-6 rounded-lg shadow">
-        <h3 class="text-xl font-semibold text-white">🎯 UI/UX Developer</h3>
-        <p class="text-gray-400 mt-2">User-centered design and engaging digital experiences.</p>
-      </a>
-      <a href="full-stack-developer/" class="card-hover block bg-gray-800 p-6 rounded-lg shadow">
-        <h3 class="text-xl font-semibold text-white">🖥️ Full Stack Developer</h3>
-        <p class="text-gray-400 mt-2">Complete end-to-end web solutions.</p>
-      </a>
-      <a href="software-engineer/" class="card-hover block bg-gray-800 p-6 rounded-lg shadow">
-        <h3 class="text-xl font-semibold text-white">💻 Software Engineer</h3>
-        <p class="text-gray-400 mt-2">Robust and scalable software development.</p>
-      </a>
-      <a href="data-scientist/" class="card-hover block bg-gray-800 p-6 rounded-lg shadow">
-        <h3 class="text-xl font-semibold text-white">📊 Data Scientist</h3>
-        <p class="text-gray-400 mt-2">Predictive analytics and machine learning.</p>
-      </a>
-      <a href="data-analyst/" class="card-hover block bg-gray-800 p-6 rounded-lg shadow">
-        <h3 class="text-xl font-semibold text-white">📈 Data Analyst</h3>
-        <p class="text-gray-400 mt-2">Dashboards, KPIs, and actionable insights.</p>
-      </a>
-      <a href="machine-learning-engineer/" class="card-hover block bg-gray-800 p-6 rounded-lg shadow">
-        <h3 class="text-xl font-semibold text-white">🤖 Machine Learning Engineer</h3>
-        <p class="text-gray-400 mt-2">Model training, optimization, and deployment.</p>
-      </a>
-      <a href="ai-engineer/" class="card-hover block bg-gray-800 p-6 rounded-lg shadow">
-        <h3 class="text-xl font-semibold text-white">🧠 AI Engineer</h3>
-        <p class="text-gray-400 mt-2">Intelligent AI systems and NLP applications.</p>
-      </a>
-      <a href="software-architect/" class="card-hover block bg-gray-800 p-6 rounded-lg shadow">
-        <h3 class="text-xl font-semibold text-white">🏗️ Software Architect</h3>
-        <p class="text-gray-400 mt-2">System design and enterprise architecture.</p>
-      </a>
-    </div>
-  </section>
-
-  <!-- Contact -->
-  <section id="contact" class="bg-gray-800 py-24 fade-section">
-    <div class="max-w-6xl mx-auto px-4 text-center">
-      <h2 class="text-3xl font-bold shimmer mb-6">Get in Touch</h2>
-      <p class="text-gray-400 mb-4">Feel free to connect with me for collaboration or opportunities.</p>
-      <p>Email: <a href="mailto:murphycollins@my.uopeople.edu" class="text-teal-400 hover:underline">murphycollins@my.uopeople.edu</a></p>
-      <p>GitHub: <a href="https://github.com/murphycollins" class="text-teal-400 hover:underline">github.com/murphycollins</a></p>
-      <p>Portfolio: <a href="https://murphycollins.github.io" class="text-teal-400 hover:underline">murphycollins.github.io</a></p>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="bg-gray-900 text-center py-6 fade-section">
-    <span class="text-gray-500">© 2025 <span class="gradient-text">Murphy Collins</span>. All rights reserved.</span>
-  </footer>
-
-  <!-- Back to Top Button -->
-  <button id="backToTop" onclick="window.scrollTo({top:0, behavior:'smooth'});">↑</button>
-
-  <!-- Scripts -->
   <script>
-    const sections = document.querySelectorAll("section");
-    const navLinks = document.querySelectorAll(".nav-link");
-    const navbar = document.getElementById("navbar");
-    const backToTop = document.getElementById("backToTop");
-    const fadeSections = document.querySelectorAll(".fade-section");
-    const loader = document.getElementById("loader");
+    /* -------- NLP via serverless API -------- */
+    async function callNLP(task) {
+      const text = document.getElementById('nlp-text').value;
+      const resultDiv = document.getElementById('nlp-result');
+      resultDiv.innerText = 'Processing...';
+      try {
+        const res = await fetch('/.netlify/functions/nlp', {
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ text, task })
+        });
 
-    window.addEventListener("scroll", () => {
-      let current = "";
-      sections.forEach((section) => {
-        const sectionTop = section.offsetTop - 100;
-        if (scrollY >= sectionTop) { current = section.getAttribute("id"); }
-      });
-
-      navLinks.forEach((link) => {
-        link.classList.remove("active-link");
-        if (link.getAttribute("href") === "#" + current) {
-          link.classList.add("active-link");
+        const contentType = res.headers.get('content-type') || '';
+        if (!contentType.includes('application/json')) {
+          const textResp = await res.text();
+          throw new Error("Non-JSON response from server: " + textResp.slice(0,200));
         }
-      });
 
-      if (window.scrollY > 50) {
-        navbar.classList.remove("transparent");
-        navbar.classList.add("solid");
-      } else {
-        navbar.classList.remove("solid");
-        navbar.classList.add("transparent");
+        const data = await res.json();
+        resultDiv.innerText = data.result || data.error || "No result";
+      } catch(e){ 
+        resultDiv.innerText = 'NLP error: ' + e.message;
+        console.error(e);
       }
+    }
 
-      if (window.scrollY > 300) {
-        backToTop.classList.add("show");
-      } else {
-        backToTop.classList.remove("show");
+    /* -------- AI Image Generation via serverless API -------- */
+    async function generateImage(){
+      const prompt = document.getElementById('image-prompt').value;
+      const imgEl = document.getElementById('generated-img');
+      imgEl.src = '';
+      try {
+        const res = await fetch('/.netlify/functions/generate-image', {
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ prompt })
+        });
+
+        const contentType = res.headers.get('content-type') || '';
+        if (!contentType.includes('application/json')) {
+          const text = await res.text();
+          throw new Error("Non-JSON response from server: " + text.slice(0,200));
+        }
+
+        const data = await res.json();
+        if (!data.url) throw new Error(data.error || "No image URL returned");
+        imgEl.src = data.url;
+      } catch(e) {
+        alert('Image generation failed: ' + e.message);
+        console.error(e);
       }
+    }
 
-      fadeSections.forEach((sec) => {
-        const rect = sec.getBoundingClientRect();
-        if (rect.top < window.innerHeight - 100) { sec.classList.add("show"); }
-      });
+    /* -------- TFJS Computer Vision -------- */
+    let cocoModel=null;
+    const cvCanvas = document.getElementById('cv-canvas');
+    const cvCtx = cvCanvas.getContext('2d');
+    const cvOutput = document.getElementById('cv-output');
+
+    document.getElementById('img-upload').addEventListener('change', async (e)=>{
+      const file = e.target.files[0]; if(!file) return;
+      const img = new Image(); img.src = URL.createObjectURL(file);
+      img.onload = async () => {
+        cvCanvas.width = img.width; cvCanvas.height = img.height;
+        cvCtx.drawImage(img,0,0,img.width,img.height);
+        if(!cocoModel) cocoModel = await cocoSsd.load();
+        const predictions = await cocoModel.detect(cvCanvas);
+        cvOutput.innerText = predictions.map(p=>`${p.class} (${Math.round(p.score*100)}%)`).join(', ') || 'No objects detected';
+      };
     });
 
-    window.addEventListener("load", () => {
-      loader.style.opacity = "0";
-      setTimeout(() => {
-        loader.style.display = "none";
-        document.getElementById("navbar").style.opacity = "1";
-      }, 600);
-    });
+    /* -------- Simple RL Agent (Q-Learning on 5x5 grid) -------- */
+    const rlCanvas = document.getElementById('rl-world');
+    const rlCtx = rlCanvas.getContext('2d');
+    const rlPlot = document.getElementById('rl-plot');
+    let qTable={}, episode=0, start=[0,0], goal=[4,4], policy=null;
+
+    function drawRL(agent=[0,0]) {
+      rlCtx.clearRect(0,0,rlCanvas.width,rlCanvas.height);
+      const cellSize = rlCanvas.width/5;
+      for(let i=0;i<5;i++){ for(let j=0;j<5;j++){
+        rlCtx.strokeStyle="#555"; rlCtx.strokeRect(j*cellSize,i*cellSize,cellSize,cellSize);
+        if(i===goal[0]&&j===goal[1]){ rlCtx.fillStyle='green'; rlCtx.fillRect(j*cellSize,i*cellSize,cellSize,cellSize); }
+      }}
+      rlCtx.fillStyle='red'; rlCtx.fillRect(agent[1]*cellSize, agent[0]*cellSize, cellSize, cellSize);
+    }
+
+    async function trainRL(){
+      qTable={}; episode=0;
+      for(let ep=0;ep<200;ep++){
+        let state=start.slice(), steps=0;
+        while(steps<50){
+          const s = state.join(',');
+          if(!qTable[s]) qTable[s]=[0,0,0,0];
+          const action = Math.floor(Math.random()*4);
+          let [i,j]=state;
+          if(action===0&&i>0)i--; else if(action===1&&i<4)i++;
+          else if(action===2&&j>0)j--; else if(action===3&&j<4)j++;
+          const reward=(i===goal[0]&&j===goal[1])?100:-1;
+          const oldVal=qTable[s][action];
+          const nextState=[i,j].join(',');
+          if(!qTable[nextState]) qTable[nextState]=[0,0,0,0];
+          const maxNext=Math.max(...qTable[nextState]);
+          qTable[s][action] = oldVal + 0.1*(reward + 0.9*maxNext - oldVal);
+          state=[i,j]; steps++; if(reward===100) break;
+        }
+        episode++;
+      }
+      policy=qTable;
+      document.getElementById('rl-info').innerText = 'Episodes: '+episode;
+      drawRL(start);
+      alert('RL Training Completed!');
+    }
+
+    function runRL(){
+      if(!policy) return alert('Train agent first!');
+      let state=start.slice(), steps=0;
+      const interval = setInterval(()=>{
+        drawRL(state);
+        const s=state.join(',');
+        const action=policy[s].indexOf(Math.max(...policy[s]));
+        let [i,j]=state;
+        if(action===0&&i>0)i--; else if(action===1&&i<4)i++;
+        else if(action===2&&j>0)j--; else if(action===3&&j<4)j++;
+        state=[i,j]; steps++;
+        if(i===goal[0]&&j===goal[1] || steps>50){ clearInterval(interval); }
+      },200);
+    }
+
   </script>
-
 </body>
 </html>

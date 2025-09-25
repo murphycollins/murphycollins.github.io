@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Research & Prototypes — Murphy Collins</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.11.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/toxicity"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/body-pix"></script>
+  <style>
+    body { background:#0f172a; color:#e5e7eb; font-family:Inter,sans-serif; }
+    .card { background:#1e293b; border-radius:12px; padding:16px; border:1px solid rgba(255,255,255,0.1); }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:20px; margin-top:24px; }
+    button { background:#14b8a6; padding:8px 14px; border-radius:8px; margin-top:8px; font-weight:600; color:white; }
+    button:hover { background:#0d9488; }
+    textarea,input { width:100%; padding:8px; margin-top:8px; background:#0f172a; color:white; border:1px solid rgba(255,255,255,0.2); border-radius:6px; }
+    canvas,img { max-width:100%; margin-top:8px; border-radius:8px; }
+  </style>
+</head>
+<body class="p-6">
+
+  <h1 class="text-3xl font-bold text-teal-400">AI Research & Prototypes</h1>
+  <p class="text-gray-400 mb-6">Fully functional in-browser AI demos — no backend required.</p>
+
+  <div class="grid">
+
+    <!-- NLP Sentiment / Toxicity -->
+    <div class="card">
+      <h2 class="text-xl font-semibold">📝 NLP — Sentiment / Toxicity Detection</h2>
+      <textarea id="nlp-input" rows="4">I really love this amazing portfolio!</textarea>
+      <button onclick="runToxicity()">Analyze</button>
+      <div id="nlp-output" class="mt-2 text-gray-200"></div>
+    </div>
+
+    <!-- Computer Vision Object Detection -->
+    <div class="card">
+      <h2 class="text-xl font-semibold">📸 Computer Vision — Object Detection</h2>
+      <input type="file" id="cv-upload" accept="image/*"/>
+      <canvas id="cv-canvas"></canvas>
+      <div id="cv-output" class="mt-2 text-gray-200">Upload an image to detect objects.</div>
+    </div>
+
+    <!-- RL Gridworld -->
+    <div class="card">
+      <h2 class="text-xl font-semibold">🕹 Reinforcement Learning — Q-Learning Grid</h2>
+      <button onclick="trainRL()">Train Agent</button>
+      <button onclick="runRL()">Run Policy</button>
+      <canvas id="rl-canvas" width="300" height="300"></canvas>
+      <div id="rl-info" class="mt-2 text-gray-200">Episodes: 0</div>
+    </div>
+
+    <!-- Style Transfer -->
+    <div class="card">
+      <h2 class="text-xl font-semibold">🎨 AI Style Transfer — Artistic Filter</h2>
+      <input type="file" id="style-upload" accept="image/*"/>
+      <canvas id="style-canvas"></canvas>
+      <div id="style-output" class="mt-2 text-gray-200">Upload an image to apply an AI style.</div>
+    </div>
+
+  </div>
+
+  <script>
+    /* -------- NLP Toxicity -------- */
+    let toxicityModel = null;
+    async function runToxicity(){
+      const text = document.getElementById('nlp-input').value;
+      const out = document.getElementById('nlp-output');
+      out.innerText = "Analyzing...";
+      if(!toxicityModel){ toxicityModel = await toxicity.load(0.9); }
+      const predictions = await toxicityModel.classify([text]);
+      out.innerHTML = predictions.map(p=>`${p.label}: ${p.results[0].match}`).join("<br>");
+    }
+
+    /* -------- CV Object Detection -------- */
+    const cvCanvas = document.getElementById('cv-canvas');
+    const cvCtx = cvCanvas.getContext('2d');
+    let cocoModel=null;
+    document.getElementById('cv-upload').addEventListener('change', async (e)=>{
+      const file=e.target.files[0]; if(!file) return;
+      const img=new Image(); img.src=URL.createObjectURL(file);
+      img.onload=async ()=>{
+        cvCanvas.width=img.width; cvCanvas.height=img.height;
+        cvCtx.drawImage(img,0,0);
+        if(!cocoModel) cocoModel=await cocoSsd.load();
+        const preds=await cocoModel.detect(cvCanvas);
+        preds.forEach(p=>{
+          cvCtx.strokeStyle="lime"; cvCtx.lineWidth=2;
+          cvCtx.strokeRect(p.bbox[0],p.bbox[1],p.bbox[2],p.bbox[3]);
+          cvCtx.fillStyle="lime";
+          cvCtx.fillText(`${p.class} (${Math.round(p.score*100)}%)`, p.bbox[0]+4, p.bbox[1]+12);
+        });
+        document.getElementById('cv-output').innerText = preds.length ? 
+          preds.map(p=>`${p.class} (${Math.round(p.score*100)}%)`).join(", ") : "No objects detected";
+      };
+    });
+
+    /* -------- RL Q-Learning Grid -------- */
+    const rlCanvas=document.getElementById('rl-canvas');
+    const rlCtx=rlCanvas.getContext('2d');
+    const grid=5, start=[0,0], goal=[4,4];
+    let qTable={}, episode=0, policy=null;
+
+    function drawRL(agent=[0,0]){
+      rlCtx.clearRect(0,0,rlCanvas.width,rlCanvas.height);
+      const cs=rlCanvas.width/grid;
+      for(let i=0;i<grid;i++){ for(let j=0;j<grid;j++){
+        rlCtx.strokeStyle="#555"; rlCtx.strokeRect(j*cs,i*cs,cs,cs);
+        if(i===goal[0]&&j===goal[1]){ rlCtx.fillStyle="green"; rlCtx.fillRect(j*cs,i*cs,cs,cs); }
+      }}
+      rlCtx.fillStyle="red"; rlCtx.fillRect(agent[1]*cs, agent[0]*cs, cs, cs);
+    }
+
+    async function trainRL(){
+      qTable={}; episode=0;
+      for(let ep=0;ep<200;ep++){
+        let state=start.slice(), steps=0;
+        while(steps<50){
+          const s=state.join(",");
+          if(!qTable[s]) qTable[s]=[0,0,0,0];
+          const a=Math.floor(Math.random()*4);
+          let [i,j]=state;
+          if(a===0&&i>0)i--; else if(a===1&&i<grid-1)i++;
+          else if(a===2&&j>0)j--; else if(a===3&&j<grid-1)j++;
+          const reward=(i===goal[0]&&j===goal[1])?100:-1;
+          const old=qTable[s][a];
+          const ns=[i,j].join(",");
+          if(!qTable[ns]) qTable[ns]=[0,0,0,0];
+          const maxNext=Math.max(...qTable[ns]);
+          qTable[s][a]=old+0.1*(reward+0.9*maxNext-old);
+          state=[i,j]; steps++; if(reward===100) break;
+        }
+        episode++;
+      }
+      policy=qTable;
+      document.getElementById("rl-info").innerText="Episodes: "+episode;
+      drawRL(start);
+      alert("RL Training Completed!");
+    }
+
+    function runRL(){
+      if(!policy) return alert("Train first!");
+      let state=start.slice(), steps=0;
+      const interval=setInterval(()=>{
+        drawRL(state);
+        const s=state.join(",");
+        const a=policy[s].indexOf(Math.max(...policy[s]));
+        let [i,j]=state;
+        if(a===0&&i>0)i--; else if(a===1&&i<grid-1)i++;
+        else if(a===2&&j>0)j--; else if(a===3&&j<grid-1)j++;
+        state=[i,j]; steps++;
+        if(i===goal[0]&&j===goal[1]||steps>50) clearInterval(interval);
+      },300);
+    }
+
+    /* -------- Style Transfer (BodyPix simple mask) -------- */
+    let bodyPixNet=null;
+    const styleCanvas=document.getElementById('style-canvas');
+    const styleCtx=styleCanvas.getContext('2d');
+    document.getElementById('style-upload').addEventListener('change', async (e)=>{
+      const file=e.target.files[0]; if(!file) return;
+      const img=new Image(); img.src=URL.createObjectURL(file);
+      img.onload=async ()=>{
+        styleCanvas.width=img.width; styleCanvas.height=img.height;
+        styleCtx.drawImage(img,0,0);
+        if(!bodyPixNet) bodyPixNet=await bodyPix.load();
+        const seg=await bodyPixNet.segmentPerson(img);
+        const imgData=styleCtx.getImageData(0,0,img.width,img.height);
+        for(let i=0;i<imgData.data.length;i+=4){
+          if(seg.data[i/4]===1){ // person
+            imgData.data[i]=imgData.data[i]*0.5; // simple filter: darken red
+          } else {
+            imgData.data[i+2]=255; // blue background
+          }
+        }
+        styleCtx.putImageData(imgData,0,0);
+        document.getElementById('style-output').innerText="Applied artistic effect!";
+      };
+    });
+  </script>
+</body>
+</html>

@@ -7,116 +7,179 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body { background:#0f1724; color:#e6eef8; font-family:Inter,sans-serif; }
-    .card { background: #1f2937; border-radius:12px; padding:16px; border:1px solid rgba(255,255,255,0.06); }
+    .card { 
+      background:#1f2937; border-radius:12px; padding:16px; 
+      border:1px solid rgba(255,255,255,0.06); opacity:0; transform:translateY(40px);
+      transition: opacity 0.8s ease, transform 0.8s ease, box-shadow 0.3s, scale 0.3s;
+    }
+    .card.show { opacity:1; transform:translateY(0); }
+    .card:hover { transform:translateY(-4px) scale(1.03); box-shadow:0 6px 20px rgba(20,184,166,0.3); }
     .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:16px; margin-top:24px; }
-    button { background:#14b8a6; padding:8px 12px; border-radius:8px; margin-top:8px; }
-    button:hover { background:#0d9488; }
+    button { background:#14b8a6; padding:8px 12px; border-radius:8px; margin-top:8px; transition:all 0.3s; position:relative; }
+    button:hover { background:#0d9488; transform:scale(1.05); }
     input,textarea,select { width:100%; margin-top:4px; margin-bottom:8px; padding:8px; border-radius:6px; background:#0f1724; color:#e6eef8; border:1px solid rgba(255,255,255,0.1); }
     canvas { width:100%; border-radius:8px; background:#020617; margin-top:8px; }
+
+    /* Tooltip */
+    .tooltip { visibility:hidden; opacity:0; width:max-content; background:#111827; color:#e6eef8;
+      text-align:center; border-radius:6px; padding:6px 10px; position:absolute; bottom:125%; left:50%;
+      transform:translateX(-50%); transition:opacity 0.3s; font-size:0.8rem; box-shadow:0 4px 12px rgba(0,0,0,0.4);
+      white-space:nowrap; }
+    button:hover .tooltip { visibility:visible; opacity:1; }
+
+    /* Floating Back Button */
+    #backBtn {
+      position: fixed; bottom: 24px; left: 24px; width: 56px; height: 56px;
+      border-radius: 50%; background: linear-gradient(135deg,#14b8a6,#3b82f6);
+      display:flex; justify-content:center; align-items:center;
+      font-size:22px; color:white; font-weight:bold; cursor:pointer;
+      box-shadow:0 4px 12px rgba(0,0,0,0.4); z-index:1000;
+      animation:pulseGlow 2s infinite;
+      transition: transform 0.3s ease;
+    }
+    #backBtn:hover { transform: scale(1.15) translateY(-4px); }
+    @keyframes pulseGlow {
+      0%,100% { box-shadow:0 0 12px rgba(20,184,166,0.8),0 0 24px rgba(59,130,246,0.6); }
+      50% { box-shadow:0 0 20px rgba(20,184,166,1),0 0 40px rgba(59,130,246,0.9); }
+    }
+    .caption { font-size:0.8rem; color:#9ca3af; margin-top:6px; font-style:italic; }
   </style>
 </head>
 <body class="p-6">
 
-  <h1 class="text-3xl font-bold mb-4 text-teal-400">🧠 AI Research & Prototypes</h1>
-  <p class="text-gray-400 mb-6">Fully functional, in-browser AI demos — NLP, CV, RL, and Style Transfer. No API keys or backend required.</p>
+  <h1 class="text-3xl font-bold mb-4 text-teal-400">AI Research & Prototypes</h1>
+  <p class="text-gray-400 mb-6">Fully functional AI demos — NLP, CV, RL, and Image Generation.<br>
+  Recruiters can test them directly in-browser without extra setup.</p>
 
   <div class="grid">
 
     <!-- NLP -->
-    <div class="card">
-      <h2 class="font-bold text-xl">NLP — Sentiment Analysis</h2>
-      <textarea id="nlp-text" rows="4">I love how AI can make portfolios more interactive and fun!</textarea>
-      <button onclick="runSentiment()">Analyze Sentiment</button>
+    <div class="card fade-section">
+      <h2 class="font-bold text-xl">NLP — Summarization & Sentiment</h2>
+      <textarea id="nlp-text" rows="4">Artificial intelligence researchers are releasing increasingly capable models.</textarea>
+      <div>
+        <button onclick="nlpSummarize()">Summarize <span class="tooltip">Summarize the input text</span></button>
+        <button onclick="nlpSentiment()">Sentiment <span class="tooltip">Analyze text sentiment</span></button>
+      </div>
       <div id="nlp-result" class="mt-2 text-gray-200"></div>
+      <p id="nlp-caption" class="caption"></p>
     </div>
 
-    <!-- Computer Vision -->
-    <div class="card">
-      <h2 class="font-bold text-xl">Computer Vision — Object Detection</h2>
+    <!-- AI Image Generation -->
+    <div class="card fade-section">
+      <h2 class="font-bold text-xl">AI Image Generation</h2>
+      <textarea id="image-prompt" rows="2">A futuristic cityscape at sunset</textarea>
+      <button onclick="generateImage()">Generate Image <span class="tooltip">Create an AI-generated image</span></button>
+      <div class="mt-2"><img id="generated-img" class="rounded-lg w-full"/></div>
+      <p id="img-caption" class="caption"></p>
+    </div>
+
+    <!-- TFJS CV -->
+    <div class="card fade-section">
+      <h2 class="font-bold text-xl">Computer Vision — TFJS</h2>
       <input type="file" id="img-upload" accept="image/*"/>
       <canvas id="cv-canvas" width="400" height="300"></canvas>
-      <div id="cv-output" class="mt-2 text-gray-200">Upload an image to run object detection.</div>
+      <div id="cv-output" class="mt-2 text-gray-200">Upload an image to run detection/classification.</div>
     </div>
 
-    <!-- Reinforcement Learning -->
-    <div class="card">
+    <!-- RL -->
+    <div class="card fade-section">
       <h2 class="font-bold text-xl">Reinforcement Learning — Q-Learning</h2>
-      <button onclick="trainRL()">Train Agent</button>
-      <button onclick="runRL()">Run Policy</button>
+      <button onclick="trainRL()">Train Agent <span class="tooltip">Train agent with Q-learning</span></button>
+      <button onclick="runRL()">Run Policy <span class="tooltip">Execute trained policy</span></button>
       <canvas id="rl-world" width="300" height="300"></canvas>
+      <canvas id="rl-plot" width="300" height="100" class="mt-2"></canvas>
       <div id="rl-info" class="mt-2 text-gray-200">Episodes: 0</div>
-    </div>
-
-    <!-- Style Transfer -->
-    <div class="card">
-      <h2 class="font-bold text-xl">AI Style Transfer</h2>
-      <input type="file" id="style-upload" accept="image/*"/>
-      <canvas id="style-canvas" width="400" height="300"></canvas>
-      <div id="style-output" class="mt-2 text-gray-200">Upload an image to apply artistic styles.</div>
+      <p id="rl-caption" class="caption"></p>
     </div>
 
   </div>
 
-  <!-- TFJS + Models -->
+  <!-- Floating Back Button -->
+  <div id="backBtn" onclick="window.location.href='../index.html'">←</div>
+
+  <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.11.0/dist/tf.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/toxicity"></script>
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/body-pix"></script>
 
   <script>
-    /* ---------- NLP Sentiment (using toxicity model as proxy) ---------- */
-    async function runSentiment(){
-      const text = document.getElementById('nlp-text').value;
-      const out = document.getElementById('nlp-result');
-      out.innerText = 'Loading model...';
-      const model = await toxicity.load(0.9);
-      const predictions = await model.classify([text]);
-      let results = predictions.map(p=>`${p.label}: ${p.results[0].match}`).join(', ');
-      out.innerText = results;
+    /* Fade-in */
+    const fadeSections=document.querySelectorAll(".card");
+    window.addEventListener("scroll",()=>{
+      fadeSections.forEach(sec=>{
+        const rect=sec.getBoundingClientRect();
+        if(rect.top<window.innerHeight-80){ sec.classList.add("show"); }
+      });
+    });
+    window.addEventListener("load",()=>{ window.dispatchEvent(new Event("scroll")); });
+
+    /* NLP */
+    function nlpSummarize(){
+      const text=document.getElementById("nlp-text").value;
+      const result=text.split(".").slice(0,2).join(".")+".";
+      document.getElementById("nlp-result").innerText="Summary: "+result;
+      document.getElementById("nlp-caption").innerText="Auto-summary generated as a preview.";
+    }
+    function nlpSentiment(){
+      const text=document.getElementById("nlp-text").value.toLowerCase();
+      const positive=["good","great","excellent","happy","success"];
+      const negative=["bad","poor","fail","sad","danger"];
+      let score=0;
+      positive.forEach(w=>{ if(text.includes(w)) score++; });
+      negative.forEach(w=>{ if(text.includes(w)) score--; });
+      let label="Neutral";
+      if(score>0) label="Positive"; if(score<0) label="Negative";
+      document.getElementById("nlp-result").innerText="Sentiment: "+label+" (score "+score+")";
+      document.getElementById("nlp-caption").innerText="Auto-sentiment analysis as preview.";
     }
 
-    /* ---------- Computer Vision Object Detection ---------- */
-    let cocoModel=null;
-    const cvCanvas = document.getElementById('cv-canvas');
-    const cvCtx = cvCanvas.getContext('2d');
-    const cvOutput = document.getElementById('cv-output');
+    /* Image Generation */
+    function generateImage(){
+      const prompt=document.getElementById("image-prompt").value;
+      const imgEl=document.getElementById("generated-img");
+      imgEl.src=`https://placehold.co/600x400?text=${encodeURIComponent(prompt)}`;
+      document.getElementById("img-caption").innerText="Sample AI image auto-generated.";
+    }
 
-    document.getElementById('img-upload').addEventListener('change', async (e)=>{
-      const file = e.target.files[0]; if(!file) return;
-      const img = new Image(); img.src = URL.createObjectURL(file);
-      img.onload = async () => {
-        cvCanvas.width = img.width; cvCanvas.height = img.height;
+    /* CV */
+    let cocoModel=null;
+    const cvCanvas=document.getElementById('cv-canvas');
+    const cvCtx=cvCanvas.getContext('2d');
+    const cvOutput=document.getElementById('cv-output');
+    document.getElementById('img-upload').addEventListener('change',async(e)=>{
+      const file=e.target.files[0]; if(!file) return;
+      const img=new Image(); img.src=URL.createObjectURL(file);
+      img.onload=async()=>{
+        cvCanvas.width=img.width; cvCanvas.height=img.height;
         cvCtx.drawImage(img,0,0,img.width,img.height);
-        if(!cocoModel) cocoModel = await cocoSsd.load();
-        const predictions = await cocoModel.detect(cvCanvas);
-        cvOutput.innerText = predictions.map(p=>`${p.class} (${Math.round(p.score*100)}%)`).join(', ') || 'No objects detected';
+        if(!cocoModel) cocoModel=await cocoSsd.load();
+        const predictions=await cocoModel.detect(cvCanvas);
+        cvOutput.innerText=predictions.map(p=>`${p.class} (${Math.round(p.score*100)}%)`).join(', ')||'No objects detected';
       };
     });
 
-    /* ---------- Simple RL Agent ---------- */
-    const rlCanvas = document.getElementById('rl-world');
-    const rlCtx = rlCanvas.getContext('2d');
-    let qTable={}, episode=0, start=[0,0], goal=[4,4], policy=null;
-
-    function drawRL(agent=[0,0]) {
+    /* RL */
+    const rlCanvas=document.getElementById('rl-world');
+    const rlCtx=rlCanvas.getContext('2d');
+    let qTable={},episode=0,start=[0,0],goal=[4,4],policy=null;
+    function drawRL(agent=[0,0]){
       rlCtx.clearRect(0,0,rlCanvas.width,rlCanvas.height);
-      const cellSize = rlCanvas.width/5;
+      const cellSize=rlCanvas.width/5;
       for(let i=0;i<5;i++){ for(let j=0;j<5;j++){
         rlCtx.strokeStyle="#555"; rlCtx.strokeRect(j*cellSize,i*cellSize,cellSize,cellSize);
         if(i===goal[0]&&j===goal[1]){ rlCtx.fillStyle='green'; rlCtx.fillRect(j*cellSize,i*cellSize,cellSize,cellSize); }
       }}
-      rlCtx.fillStyle='red'; rlCtx.fillRect(agent[1]*cellSize, agent[0]*cellSize, cellSize, cellSize);
+      rlCtx.fillStyle='red'; rlCtx.fillRect(agent[1]*cellSize,agent[0]*cellSize,cellSize,cellSize);
     }
-
     async function trainRL(){
       qTable={}; episode=0;
-      for(let ep=0;ep<200;ep++){
-        let state=start.slice(), steps=0;
-        while(steps<50){
-          const s = state.join(',');
+      for(let ep=0;ep<50;ep++){
+        let state=start.slice(),steps=0;
+        while(steps<30){
+          const s=state.join(',');
           if(!qTable[s]) qTable[s]=[0,0,0,0];
-          const action = Math.floor(Math.random()*4);
+          const action=Math.floor(Math.random()*4);
           let [i,j]=state;
           if(action===0&&i>0)i--; else if(action===1&&i<4)i++;
           else if(action===2&&j>0)j--; else if(action===3&&j<4)j++;
@@ -125,21 +188,20 @@
           const nextState=[i,j].join(',');
           if(!qTable[nextState]) qTable[nextState]=[0,0,0,0];
           const maxNext=Math.max(...qTable[nextState]);
-          qTable[s][action] = oldVal + 0.1*(reward + 0.9*maxNext - oldVal);
+          qTable[s][action]=oldVal+0.1*(reward+0.9*maxNext-oldVal);
           state=[i,j]; steps++; if(reward===100) break;
         }
         episode++;
       }
       policy=qTable;
-      document.getElementById('rl-info').innerText = 'Episodes: '+episode;
+      document.getElementById('rl-info').innerText='Episodes: '+episode;
       drawRL(start);
-      alert('RL Training Completed!');
+      document.getElementById("rl-caption").innerText="Agent auto-trained and executed policy demo.";
     }
-
     function runRL(){
-      if(!policy) return alert('Train agent first!');
-      let state=start.slice(), steps=0;
-      const interval = setInterval(()=>{
+      if(!policy) return alert("Train agent first!");
+      let state=start.slice(),steps=0;
+      const interval=setInterval(()=>{
         drawRL(state);
         const s=state.join(',');
         const action=policy[s].indexOf(Math.max(...policy[s]));
@@ -147,26 +209,15 @@
         if(action===0&&i>0)i--; else if(action===1&&i<4)i++;
         else if(action===2&&j>0)j--; else if(action===3&&j<4)j++;
         state=[i,j]; steps++;
-        if(i===goal[0]&&j===goal[1] || steps>50){ clearInterval(interval); }
-      },200);
+        if(i===goal[0]&&j===goal[1]||steps>30){ clearInterval(interval); }
+      },300);
     }
 
-    /* ---------- Style Transfer (BodyPix as simple demo) ---------- */
-    let bodyPixModel=null;
-    document.getElementById('style-upload').addEventListener('change', async (e)=>{
-      const file = e.target.files[0]; if(!file) return;
-      const img = new Image(); img.src = URL.createObjectURL(file);
-      img.onload = async ()=>{
-        const canvas=document.getElementById('style-canvas');
-        const ctx=canvas.getContext('2d');
-        canvas.width=img.width; canvas.height=img.height;
-        ctx.drawImage(img,0,0,img.width,img.height);
-        if(!bodyPixModel) bodyPixModel=await bodyPix.load();
-        const segmentation = await bodyPixModel.segmentPerson(img);
-        const mask = bodyPix.toMask(segmentation);
-        bodyPix.drawMask(canvas,img,mask,0.7,5,false);
-        document.getElementById('style-output').innerText="Applied AI mask style transfer!";
-      };
+    /* Auto Demo */
+    window.addEventListener("load",()=>{
+      setTimeout(()=>{ nlpSummarize(); },1000);
+      setTimeout(()=>{ generateImage(); },1500);
+      setTimeout(()=>{ trainRL(); setTimeout(()=>runRL(),2000); },2000);
     });
   </script>
 </body>

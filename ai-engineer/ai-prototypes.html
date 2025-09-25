@@ -19,40 +19,73 @@
     button:hover { background:#0d9488; transform:scale(1.05); }
     input,textarea,select { width:100%; margin-top:4px; margin-bottom:8px; padding:8px; border-radius:6px; background:#0f1724; color:#e6eef8; border:1px solid rgba(255,255,255,0.1); }
     canvas { width:100%; border-radius:8px; background:#020617; margin-top:8px; }
-
-    /* Tooltip */
     .tooltip { visibility:hidden; opacity:0; width:max-content; background:#111827; color:#e6eef8;
       text-align:center; border-radius:6px; padding:6px 10px; position:absolute; bottom:125%; left:50%;
       transform:translateX(-50%); transition:opacity 0.3s; font-size:0.8rem; box-shadow:0 4px 12px rgba(0,0,0,0.4);
       white-space:nowrap; }
     button:hover .tooltip { visibility:visible; opacity:1; }
-
-    /* Floating Back Button */
-    #backBtn {
-      position: fixed; bottom: 24px; left: 24px; width: 56px; height: 56px;
+    #backBtn { position: fixed; bottom: 24px; left: 24px; width: 56px; height: 56px;
       border-radius: 50%; background: linear-gradient(135deg,#14b8a6,#3b82f6);
       display:flex; justify-content:center; align-items:center;
       font-size:22px; color:white; font-weight:bold; cursor:pointer;
       box-shadow:0 4px 12px rgba(0,0,0,0.4); z-index:1000;
       animation:pulseGlow 2s infinite;
-      transition: transform 0.3s ease;
-    }
+      transition: transform 0.3s ease; }
     #backBtn:hover { transform: scale(1.15) translateY(-4px); }
-    @keyframes pulseGlow {
-      0%,100% { box-shadow:0 0 12px rgba(20,184,166,0.8),0 0 24px rgba(59,130,246,0.6); }
-      50% { box-shadow:0 0 20px rgba(20,184,166,1),0 0 40px rgba(59,130,246,0.9); }
-    }
+    @keyframes pulseGlow { 0%,100% { box-shadow:0 0 12px rgba(20,184,166,0.8),0 0 24px rgba(59,130,246,0.6); }
+      50% { box-shadow:0 0 20px rgba(20,184,166,1),0 0 40px rgba(59,130,246,0.9); } }
     .caption { font-size:0.8rem; color:#9ca3af; margin-top:6px; font-style:italic; }
+    /* Live Badge */
+    #liveBadge {
+      display:inline-block;
+      margin-left:12px;
+      padding:6px 12px;
+      border-radius:9999px;
+      font-size:0.9rem;
+      font-weight:bold;
+      background:linear-gradient(135deg,#ef4444,#f59e0b);
+      color:white;
+      animation:glowPulse 1.5s infinite;
+    }
+    @keyframes glowPulse {
+      0%,100% { box-shadow:0 0 8px rgba(239,68,68,0.8), 0 0 16px rgba(245,158,11,0.6); opacity:1; }
+      50% { box-shadow:0 0 16px rgba(239,68,68,1), 0 0 32px rgba(245,158,11,0.9); opacity:0.8; }
+    }
+    #liveBadge.steady {
+      animation:none;
+      box-shadow:0 0 8px rgba(20,184,166,0.8),0 0 16px rgba(59,130,246,0.7);
+      background:linear-gradient(135deg,#14b8a6,#3b82f6);
+    }
+    /* Progress bar */
+    #progressBarContainer {
+      width:200px;
+      height:6px;
+      background:#1f2937;
+      border-radius:9999px;
+      margin-left:12px;
+      overflow:hidden;
+      display:inline-block;
+      vertical-align:middle;
+    }
+    #progressBar {
+      height:100%;
+      width:0%;
+      background:linear-gradient(90deg,#14b8a6,#3b82f6);
+      transition:width 0.6s ease;
+    }
   </style>
 </head>
 <body class="p-6">
 
-  <h1 class="text-3xl font-bold mb-4 text-teal-400">AI Research & Prototypes</h1>
+  <h1 class="text-3xl font-bold mb-4 text-teal-400">
+    AI Research & Prototypes
+    <span id="liveBadge">Live Demo Running</span>
+    <span id="progressBarContainer"><span id="progressBar"></span></span>
+  </h1>
   <p class="text-gray-400 mb-6">Fully functional AI demos — NLP, CV, RL, and Image Generation.<br>
   Recruiters can test them directly in-browser without extra setup.</p>
 
   <div class="grid">
-
     <!-- NLP -->
     <div class="card fade-section">
       <h2 class="font-bold text-xl">NLP — Summarization & Sentiment</h2>
@@ -92,10 +125,9 @@
       <div id="rl-info" class="mt-2 text-gray-200">Episodes: 0</div>
       <p id="rl-caption" class="caption"></p>
     </div>
-
   </div>
 
-  <!-- Floating Back Button -->
+  <!-- Back Button -->
   <div id="backBtn" onclick="window.location.href='../index.html'">←</div>
 
   <!-- Scripts -->
@@ -104,14 +136,11 @@
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet"></script>
 
   <script>
-    /* Fade-in */
     const fadeSections=document.querySelectorAll(".card");
-    window.addEventListener("scroll",()=>{
-      fadeSections.forEach(sec=>{
-        const rect=sec.getBoundingClientRect();
-        if(rect.top<window.innerHeight-80){ sec.classList.add("show"); }
-      });
-    });
+    window.addEventListener("scroll",()=>{ fadeSections.forEach(sec=>{
+      const rect=sec.getBoundingClientRect();
+      if(rect.top<window.innerHeight-80){ sec.classList.add("show"); }
+    }); });
     window.addEventListener("load",()=>{ window.dispatchEvent(new Event("scroll")); });
 
     /* NLP */
@@ -128,13 +157,12 @@
       let score=0;
       positive.forEach(w=>{ if(text.includes(w)) score++; });
       negative.forEach(w=>{ if(text.includes(w)) score--; });
-      let label="Neutral";
-      if(score>0) label="Positive"; if(score<0) label="Negative";
+      let label="Neutral"; if(score>0) label="Positive"; if(score<0) label="Negative";
       document.getElementById("nlp-result").innerText="Sentiment: "+label+" (score "+score+")";
       document.getElementById("nlp-caption").innerText="Auto-sentiment analysis as preview.";
     }
 
-    /* Image Generation */
+    /* Image */
     function generateImage(){
       const prompt=document.getElementById("image-prompt").value;
       const imgEl=document.getElementById("generated-img");
@@ -213,11 +241,23 @@
       },300);
     }
 
-    /* Auto Demo */
+    /* Auto Demo + Progress */
     window.addEventListener("load",()=>{
-      setTimeout(()=>{ nlpSummarize(); },1000);
-      setTimeout(()=>{ generateImage(); },1500);
-      setTimeout(()=>{ trainRL(); setTimeout(()=>runRL(),2000); },2000);
+      const badge=document.getElementById("liveBadge");
+      const progress=document.getElementById("progressBar");
+      function updateProgress(p){ progress.style.width=p+"%"; }
+
+      setTimeout(()=>{ nlpSummarize(); updateProgress(33); },1000);
+      setTimeout(()=>{ generateImage(); updateProgress(66); },1500);
+      setTimeout(()=>{
+        trainRL(); 
+        setTimeout(()=>{ 
+          runRL(); 
+          updateProgress(100); 
+          badge.textContent="Live Demo Complete"; 
+          badge.classList.add("steady"); 
+        },2000);
+      },2000);
     });
   </script>
 </body>

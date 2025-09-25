@@ -65,13 +65,13 @@
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet"></script>
 
   <script>
-    /* -------- NLP via serverless API -------- */
+    /* -------- NLP via Netlify Function -------- */
     async function callNLP(task) {
       const text = document.getElementById('nlp-text').value;
       const resultDiv = document.getElementById('nlp-result');
       resultDiv.innerText = 'Processing...';
       try {
-        const res = await fetch('/api/nlp', {
+        const res = await fetch('/.netlify/functions/nlp', {
           method:'POST', headers:{'Content-Type':'application/json'},
           body: JSON.stringify({ text, task })
         });
@@ -80,18 +80,22 @@
       } catch(e){ resultDiv.innerText = e.message; }
     }
 
-    /* -------- AI Image Generation via serverless API -------- */
+    /* -------- AI Image Generation via Netlify Function -------- */
     async function generateImage(){
       const prompt = document.getElementById('image-prompt').value;
       const imgEl = document.getElementById('generated-img');
       imgEl.src = '';
       try {
-        const res = await fetch('/api/generate-image', {
+        const res = await fetch('/.netlify/functions/generate-image', {
           method:'POST', headers:{'Content-Type':'application/json'},
           body: JSON.stringify({ prompt })
         });
         const data = await res.json();
-        imgEl.src = data.url;
+        if (data.url) {
+          imgEl.src = data.url;
+        } else {
+          alert(data.error || 'Image generation failed');
+        }
       } catch(e){ alert(e.message); }
     }
 
@@ -170,7 +174,6 @@
         if(i===goal[0]&&j===goal[1] || steps>50){ clearInterval(interval); }
       },200);
     }
-
   </script>
 </body>
 </html>

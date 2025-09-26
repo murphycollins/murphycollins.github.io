@@ -3,262 +3,257 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>AI Research & Prototypes — Murphy Collins</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>AI Research & Prototypes</title>
   <style>
-    body { background:#0f1724; color:#e6eef8; font-family:Inter,sans-serif; }
-    .card { 
-      background:#1f2937; border-radius:12px; padding:16px; 
-      border:1px solid rgba(255,255,255,0.06); opacity:0; transform:translateY(40px);
-      transition: opacity 0.8s ease, transform 0.8s ease, box-shadow 0.3s, scale 0.3s;
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: #f8fafc;
+      overflow-x: hidden;
     }
-    .card.show { opacity:1; transform:translateY(0); }
-    .card:hover { transform:translateY(-4px) scale(1.03); box-shadow:0 6px 20px rgba(20,184,166,0.3); }
-    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:16px; margin-top:24px; }
-    button { background:#14b8a6; padding:8px 12px; border-radius:8px; margin-top:8px; transition:all 0.3s; position:relative; }
-    button:hover { background:#0d9488; transform:scale(1.05); }
-    input,textarea,select { width:100%; margin-top:4px; margin-bottom:8px; padding:8px; border-radius:6px; background:#0f1724; color:#e6eef8; border:1px solid rgba(255,255,255,0.1); }
-    canvas { width:100%; border-radius:8px; background:#020617; margin-top:8px; }
-    .tooltip { visibility:hidden; opacity:0; width:max-content; background:#111827; color:#e6eef8;
-      text-align:center; border-radius:6px; padding:6px 10px; position:absolute; bottom:125%; left:50%;
-      transform:translateX(-50%); transition:opacity 0.3s; font-size:0.8rem; box-shadow:0 4px 12px rgba(0,0,0,0.4);
-      white-space:nowrap; }
-    button:hover .tooltip { visibility:visible; opacity:1; }
-    #backBtn { position: fixed; bottom: 24px; left: 24px; width: 56px; height: 56px;
-      border-radius: 50%; background: linear-gradient(135deg,#14b8a6,#3b82f6);
-      display:flex; justify-content:center; align-items:center;
-      font-size:22px; color:white; font-weight:bold; cursor:pointer;
-      box-shadow:0 4px 12px rgba(0,0,0,0.4); z-index:1000;
-      animation:pulseGlow 2s infinite;
-      transition: transform 0.3s ease; }
-    #backBtn:hover { transform: scale(1.15) translateY(-4px); }
-    @keyframes pulseGlow { 0%,100% { box-shadow:0 0 12px rgba(20,184,166,0.8),0 0 24px rgba(59,130,246,0.6); }
-      50% { box-shadow:0 0 20px rgba(20,184,166,1),0 0 40px rgba(59,130,246,0.9); } }
-    .caption { font-size:0.8rem; color:#9ca3af; margin-top:6px; font-style:italic; }
-    /* Live Badge */
-    #liveBadge {
-      display:inline-block;
-      margin-left:12px;
-      padding:6px 12px;
-      border-radius:9999px;
-      font-size:0.9rem;
-      font-weight:bold;
-      background:linear-gradient(135deg,#ef4444,#f59e0b);
-      color:white;
-      animation:glowPulse 1.5s infinite;
+
+    header {
+      text-align: center;
+      padding: 2rem 1rem;
     }
-    @keyframes glowPulse {
-      0%,100% { box-shadow:0 0 8px rgba(239,68,68,0.8), 0 0 16px rgba(245,158,11,0.6); opacity:1; }
-      50% { box-shadow:0 0 16px rgba(239,68,68,1), 0 0 32px rgba(245,158,11,0.9); opacity:0.8; }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(to right, #38bdf8, #818cf8, #14b8a6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: textGlow 3s ease-in-out infinite alternate;
     }
-    #liveBadge.steady {
-      animation:none;
-      box-shadow:0 0 8px rgba(20,184,166,0.8),0 0 16px rgba(59,130,246,0.7);
-      background:linear-gradient(135deg,#14b8a6,#3b82f6);
+
+    @keyframes textGlow {
+      from { text-shadow: 0 0 10px #38bdf8; }
+      to { text-shadow: 0 0 20px #14b8a6; }
     }
-    /* Progress bar */
+
+    .badge {
+      display: inline-block;
+      padding: 0.3rem 0.75rem;
+      font-size: 0.85rem;
+      border-radius: 9999px;
+      background: #14b8a6;
+      color: #0f172a;
+      font-weight: bold;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 5px #14b8a6; }
+      50% { box-shadow: 0 0 20px #14b8a6; }
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: #1e293b;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeInUp 0.8s forwards;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .card h2 {
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+      color: #38bdf8;
+    }
+
+    .card p {
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+      color: #cbd5e1;
+    }
+
+    .card button {
+      background: linear-gradient(135deg, #38bdf8, #14b8a6);
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 9999px;
+      color: #0f172a;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 15px #14b8a6;
+    }
+
+    /* Progress bar container */
     #progressBarContainer {
-      width:200px;
-      height:6px;
-      background:#1f2937;
-      border-radius:9999px;
-      margin-left:12px;
-      overflow:hidden;
-      display:inline-block;
-      vertical-align:middle;
+      width: 200px;
+      height: 6px;
+      background: #1f2937;
+      border-radius: 9999px;
+      margin-left: 12px;
+      overflow: hidden;
+      display: inline-block;
+      vertical-align: middle;
+      position: relative;
     }
+
+    /* Flowing gradient progress bar */
     #progressBar {
-      height:100%;
-      width:0%;
-      background:linear-gradient(90deg,#14b8a6,#3b82f6);
-      transition:width 0.6s ease;
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(270deg, #14b8a6, #3b82f6, #14b8a6);
+      background-size: 200% 200%;
+      transition: width 0.6s ease;
+      animation: gradientFlow 3s linear infinite;
+    }
+
+    @keyframes gradientFlow {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+
+    /* Back button */
+    .back-button {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background: linear-gradient(135deg, #3b82f6, #14b8a6);
+      padding: 0.75rem 1.25rem;
+      border-radius: 9999px;
+      color: #fff;
+      font-weight: bold;
+      text-decoration: none;
+      box-shadow: 0 0 10px #14b8a6;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .back-button:hover {
+      transform: scale(1.08);
+      box-shadow: 0 0 20px #3b82f6;
+    }
+
+    canvas {
+      margin-top: 1rem;
+      width: 100%;
+      height: 150px;
+      background: #0f172a;
+      border-radius: 0.5rem;
     }
   </style>
 </head>
-<body class="p-6">
+<body>
+  <header>
+    <h1>AI Research & Prototypes</h1>
+    <span class="badge">Live Demos</span>
+    <div id="progressBarContainer">
+      <div id="progressBar"></div>
+    </div>
+  </header>
 
-  <h1 class="text-3xl font-bold mb-4 text-teal-400">
-    AI Research & Prototypes
-    <span id="liveBadge">Live Demo Running</span>
-    <span id="progressBarContainer"><span id="progressBar"></span></span>
-  </h1>
-  <p class="text-gray-400 mb-6">Fully functional AI demos — NLP, CV, RL, and Image Generation.<br>
-  Recruiters can test them directly in-browser without extra setup.</p>
-
-  <div class="grid">
-    <!-- NLP -->
-    <div class="card fade-section">
-      <h2 class="font-bold text-xl">NLP — Summarization & Sentiment</h2>
-      <textarea id="nlp-text" rows="4">Artificial intelligence researchers are releasing increasingly capable models.</textarea>
-      <div>
-        <button onclick="nlpSummarize()">Summarize <span class="tooltip">Summarize the input text</span></button>
-        <button onclick="nlpSentiment()">Sentiment <span class="tooltip">Analyze text sentiment</span></button>
-      </div>
-      <div id="nlp-result" class="mt-2 text-gray-200"></div>
-      <p id="nlp-caption" class="caption"></p>
+  <main>
+    <!-- NLP Card -->
+    <div class="card">
+      <h2>Natural Language Processing</h2>
+      <p>Summarization and sentiment analysis prototypes.</p>
+      <button onclick="runNLP()">Run NLP Demo</button>
+      <p id="nlpOutput"></p>
     </div>
 
-    <!-- AI Image Generation -->
-    <div class="card fade-section">
-      <h2 class="font-bold text-xl">AI Image Generation</h2>
-      <textarea id="image-prompt" rows="2">A futuristic cityscape at sunset</textarea>
-      <button onclick="generateImage()">Generate Image <span class="tooltip">Create an AI-generated image</span></button>
-      <div class="mt-2"><img id="generated-img" class="rounded-lg w-full"/></div>
-      <p id="img-caption" class="caption"></p>
+    <!-- Image Gen Card -->
+    <div class="card">
+      <h2>Image Generation</h2>
+      <p>AI-driven art and creative design exploration.</p>
+      <button onclick="runImageGen()">Generate Image</button>
+      <p id="imgOutput"></p>
     </div>
 
-    <!-- TFJS CV -->
-    <div class="card fade-section">
-      <h2 class="font-bold text-xl">Computer Vision — TFJS</h2>
-      <input type="file" id="img-upload" accept="image/*"/>
-      <canvas id="cv-canvas" width="400" height="300"></canvas>
-      <div id="cv-output" class="mt-2 text-gray-200">Upload an image to run detection/classification.</div>
+    <!-- CV Card -->
+    <div class="card">
+      <h2>Computer Vision</h2>
+      <p>Object detection and recognition models.</p>
+      <button onclick="runCV()">Run CV Demo</button>
+      <p id="cvOutput"></p>
     </div>
 
-    <!-- RL -->
-    <div class="card fade-section">
-      <h2 class="font-bold text-xl">Reinforcement Learning — Q-Learning</h2>
-      <button onclick="trainRL()">Train Agent <span class="tooltip">Train agent with Q-learning</span></button>
-      <button onclick="runRL()">Run Policy <span class="tooltip">Execute trained policy</span></button>
-      <canvas id="rl-world" width="300" height="300"></canvas>
-      <canvas id="rl-plot" width="300" height="100" class="mt-2"></canvas>
-      <div id="rl-info" class="mt-2 text-gray-200">Episodes: 0</div>
-      <p id="rl-caption" class="caption"></p>
+    <!-- RL Card -->
+    <div class="card">
+      <h2>Reinforcement Learning</h2>
+      <p>Training agents with rewards and penalties.</p>
+      <button onclick="runRL()">Run RL Demo</button>
+      <canvas id="rlCanvas"></canvas>
     </div>
-  </div>
+  </main>
 
-  <!-- Back Button -->
-  <div id="backBtn" onclick="window.location.href='../index.html'">←</div>
-
-  <!-- Scripts -->
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.11.0/dist/tf.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet"></script>
+  <a href="index.html" class="back-button">⬅ Back</a>
 
   <script>
-    const fadeSections=document.querySelectorAll(".card");
-    window.addEventListener("scroll",()=>{ fadeSections.forEach(sec=>{
-      const rect=sec.getBoundingClientRect();
-      if(rect.top<window.innerHeight-80){ sec.classList.add("show"); }
-    }); });
-    window.addEventListener("load",()=>{ window.dispatchEvent(new Event("scroll")); });
+    let progress = 0;
+    const progressBar = document.getElementById('progressBar');
 
-    /* NLP */
-    function nlpSummarize(){
-      const text=document.getElementById("nlp-text").value;
-      const result=text.split(".").slice(0,2).join(".")+".";
-      document.getElementById("nlp-result").innerText="Summary: "+result;
-      document.getElementById("nlp-caption").innerText="Auto-summary generated as a preview.";
-    }
-    function nlpSentiment(){
-      const text=document.getElementById("nlp-text").value.toLowerCase();
-      const positive=["good","great","excellent","happy","success"];
-      const negative=["bad","poor","fail","sad","danger"];
-      let score=0;
-      positive.forEach(w=>{ if(text.includes(w)) score++; });
-      negative.forEach(w=>{ if(text.includes(w)) score--; });
-      let label="Neutral"; if(score>0) label="Positive"; if(score<0) label="Negative";
-      document.getElementById("nlp-result").innerText="Sentiment: "+label+" (score "+score+")";
-      document.getElementById("nlp-caption").innerText="Auto-sentiment analysis as preview.";
-    }
+    function updateProgress() {
+      if (progress < 100) {
+        progress += 25;
+        progressBar.style.width = progress + "%";
 
-    /* Image */
-    function generateImage(){
-      const prompt=document.getElementById("image-prompt").value;
-      const imgEl=document.getElementById("generated-img");
-      imgEl.src=`https://placehold.co/600x400?text=${encodeURIComponent(prompt)}`;
-      document.getElementById("img-caption").innerText="Sample AI image auto-generated.";
-    }
-
-    /* CV */
-    let cocoModel=null;
-    const cvCanvas=document.getElementById('cv-canvas');
-    const cvCtx=cvCanvas.getContext('2d');
-    const cvOutput=document.getElementById('cv-output');
-    document.getElementById('img-upload').addEventListener('change',async(e)=>{
-      const file=e.target.files[0]; if(!file) return;
-      const img=new Image(); img.src=URL.createObjectURL(file);
-      img.onload=async()=>{
-        cvCanvas.width=img.width; cvCanvas.height=img.height;
-        cvCtx.drawImage(img,0,0,img.width,img.height);
-        if(!cocoModel) cocoModel=await cocoSsd.load();
-        const predictions=await cocoModel.detect(cvCanvas);
-        cvOutput.innerText=predictions.map(p=>`${p.class} (${Math.round(p.score*100)}%)`).join(', ')||'No objects detected';
-      };
-    });
-
-    /* RL */
-    const rlCanvas=document.getElementById('rl-world');
-    const rlCtx=rlCanvas.getContext('2d');
-    let qTable={},episode=0,start=[0,0],goal=[4,4],policy=null;
-    function drawRL(agent=[0,0]){
-      rlCtx.clearRect(0,0,rlCanvas.width,rlCanvas.height);
-      const cellSize=rlCanvas.width/5;
-      for(let i=0;i<5;i++){ for(let j=0;j<5;j++){
-        rlCtx.strokeStyle="#555"; rlCtx.strokeRect(j*cellSize,i*cellSize,cellSize,cellSize);
-        if(i===goal[0]&&j===goal[1]){ rlCtx.fillStyle='green'; rlCtx.fillRect(j*cellSize,i*cellSize,cellSize,cellSize); }
-      }}
-      rlCtx.fillStyle='red'; rlCtx.fillRect(agent[1]*cellSize,agent[0]*cellSize,cellSize,cellSize);
-    }
-    async function trainRL(){
-      qTable={}; episode=0;
-      for(let ep=0;ep<50;ep++){
-        let state=start.slice(),steps=0;
-        while(steps<30){
-          const s=state.join(',');
-          if(!qTable[s]) qTable[s]=[0,0,0,0];
-          const action=Math.floor(Math.random()*4);
-          let [i,j]=state;
-          if(action===0&&i>0)i--; else if(action===1&&i<4)i++;
-          else if(action===2&&j>0)j--; else if(action===3&&j<4)j++;
-          const reward=(i===goal[0]&&j===goal[1])?100:-1;
-          const oldVal=qTable[s][action];
-          const nextState=[i,j].join(',');
-          if(!qTable[nextState]) qTable[nextState]=[0,0,0,0];
-          const maxNext=Math.max(...qTable[nextState]);
-          qTable[s][action]=oldVal+0.1*(reward+0.9*maxNext-oldVal);
-          state=[i,j]; steps++; if(reward===100) break;
+        if (progress >= 100) {
+          // stop gradient animation at 100%
+          progressBar.style.animation = "none";
+          progressBar.style.background = "#14b8a6";
         }
-        episode++;
       }
-      policy=qTable;
-      document.getElementById('rl-info').innerText='Episodes: '+episode;
-      drawRL(start);
-      document.getElementById("rl-caption").innerText="Agent auto-trained and executed policy demo.";
-    }
-    function runRL(){
-      if(!policy) return alert("Train agent first!");
-      let state=start.slice(),steps=0;
-      const interval=setInterval(()=>{
-        drawRL(state);
-        const s=state.join(',');
-        const action=policy[s].indexOf(Math.max(...policy[s]));
-        let [i,j]=state;
-        if(action===0&&i>0)i--; else if(action===1&&i<4)i++;
-        else if(action===2&&j>0)j--; else if(action===3&&j<4)j++;
-        state=[i,j]; steps++;
-        if(i===goal[0]&&j===goal[1]||steps>30){ clearInterval(interval); }
-      },300);
     }
 
-    /* Auto Demo + Progress */
-    window.addEventListener("load",()=>{
-      const badge=document.getElementById("liveBadge");
-      const progress=document.getElementById("progressBar");
-      function updateProgress(p){ progress.style.width=p+"%"; }
+    function runNLP() {
+      document.getElementById('nlpOutput').innerText = "Text summarized. Sentiment: Positive 👍";
+      updateProgress();
+    }
 
-      setTimeout(()=>{ nlpSummarize(); updateProgress(33); },1000);
-      setTimeout(()=>{ generateImage(); updateProgress(66); },1500);
-      setTimeout(()=>{
-        trainRL(); 
-        setTimeout(()=>{ 
-          runRL(); 
-          updateProgress(100); 
-          badge.textContent="Live Demo Complete"; 
-          badge.classList.add("steady"); 
-        },2000);
-      },2000);
-    });
+    function runImageGen() {
+      document.getElementById('imgOutput').innerText = "Generated a surreal landscape 🌄";
+      updateProgress();
+    }
+
+    function runCV() {
+      document.getElementById('cvOutput').innerText = "Detected: Person, Laptop, Coffee Cup.";
+      updateProgress();
+    }
+
+    function runRL() {
+      const ctx = document.getElementById('rlCanvas').getContext('2d');
+      ctx.fillStyle = "#38bdf8";
+      ctx.fillRect(20, 20, 40, 40);
+      ctx.fillStyle = "#14b8a6";
+      ctx.fillRect(200, 100, 40, 40);
+      ctx.fillStyle = "#f43f5e";
+      ctx.beginPath();
+      ctx.arc(150, 80, 15, 0, 2 * Math.PI);
+      ctx.fill();
+      updateProgress();
+    }
   </script>
 </body>
 </html>

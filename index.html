@@ -1,243 +1,255 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Murphy Collins | Master Portfolio</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Murphy Collins — Data Analytics Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    html { scroll-behavior: smooth; }
-    body { overflow-x: hidden; }
+    :root{
+      --bg1:#071024; --bg2:#081427; --card:#041426; --accent1:#6ee7b7; --accent2:#60a5fa; --muted:#94a3b8; --glass:rgba(255,255,255,0.03);
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:radial-gradient(1200px 400px at 10% 10%, rgba(96,165,250,0.06), transparent), linear-gradient(180deg,var(--bg1),var(--bg2));color:#e6eef6;line-height:1.45}
+    .container{max-width:1100px;margin:36px auto;padding:28px}
+    header{display:flex;gap:20px;align-items:center}
+    .avatar{width:92px;height:92px;border-radius:18px;background:linear-gradient(135deg,var(--accent1),var(--accent2));display:flex;align-items:center;justify-content:center;font-weight:800;color:#042;box-shadow:0 8px 30px rgba(2,6,23,0.6)}
+    h1{margin:0;font-size:22px}
+    .sub{color:var(--muted);font-size:14px}
+    .actions{margin-left:auto;display:flex;gap:12px}
+    .btn{background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#042;padding:10px 14px;border-radius:10px;font-weight:700;border:none;cursor:pointer;box-shadow:0 8px 20px rgba(6,12,30,0.5)}
+    .outline{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:9px 12px;border-radius:10px;color:var(--muted)}
 
-    .active-link { color: #14b8a6; font-weight: bold; }
-    .transparent { background: transparent; }
-    .solid { background: #1f2937; box-shadow: 0 2px 6px rgba(0,0,0,0.3); }
+    .grid{display:grid;grid-template-columns:1fr 360px;gap:24px;margin-top:28px}
+    .card{background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);border-radius:14px;padding:18px;box-shadow:0 6px 30px rgba(2,6,23,0.6);border:1px solid rgba(255,255,255,0.03)}
 
-    .gradient-text {
-      background: linear-gradient(90deg, #14b8a6, #3b82f6, #14b8a6);
-      background-size: 200% 200%;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: gradientShift 3s infinite linear;
-    }
-    @keyframes gradientShift {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.2); opacity: 0.7; }
-    }
+    .projects{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+    .project-card{background:var(--glass);padding:16px;border-radius:12px;cursor:pointer;transition:transform .18s ease,box-shadow .18s ease}
+    .project-card:hover{transform:translateY(-6px);box-shadow:0 12px 40px rgba(2,6,23,0.6)}
+    .tag{display:inline-block;font-size:12px;padding:6px 8px;border-radius:999px;background:rgba(255,255,255,0.03);color:var(--muted);}
+    .stat{font-size:18px;font-weight:700;color:var(--accent1)}
 
-    .shimmer {
-      background: linear-gradient(90deg, #14b8a6, #3b82f6, #14b8a6, #3b82f6);
-      background-size: 300% 300%;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: shimmerMove 6s infinite linear;
-    }
-    @keyframes shimmerMove {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
+    aside .info-row{display:flex;justify-content:space-between;margin-bottom:10px}
+    .skills{display:flex;flex-wrap:wrap;gap:8px}
 
-    #loader {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: #111827; display: flex; justify-content: center; align-items: center;
-      z-index: 9999; flex-direction: column; font-family: 'Poppins', sans-serif;
-    }
-    #loader .gradient-text {
-      font-size: 3rem; font-weight: bold; letter-spacing: 2px;
-      animation: gradientShift 3s infinite linear, pulse 1.5s infinite;
-    }
+    footer{text-align:center;color:var(--muted);margin-top:26px}
 
-    #backToTop {
-      position: fixed; bottom: 30px; right: 30px; background: #14b8a6;
-      color: white; padding: 12px 16px; border-radius: 50%; font-size: 20px;
-      cursor: pointer; display: none; box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-      transition: opacity 0.4s, transform 0.3s; opacity: 0;
-    }
-    #backToTop.show { display: block; opacity: 1; animation: bounce 1.5s infinite; }
-    #backToTop:hover { background: #0d9488; }
-    @keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+    .ribbon{position:fixed;left:18px;top:18px;padding:8px 12px;border-radius:999px;background:linear-gradient(90deg,var(--accent2),var(--accent1));color:#042;font-weight:700;box-shadow:0 6px 18px rgba(6,12,30,0.5)}
 
-    .fade-section { opacity: 0; transform: translateY(40px); transition: opacity 0.8s, transform 0.8s; }
-    .fade-section.show { opacity: 1; transform: translateY(0); }
+    .meta-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+    .small-pill{background:rgba(255,255,255,0.03);padding:6px 8px;border-radius:999px;color:var(--muted);font-size:12px}
 
-    .card-hover { transition: transform 0.3s, box-shadow 0.3s; }
-    .card-hover:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(20, 184, 166, 0.4); }
+    /* Modal */
+    .modal{position:fixed;inset:0;background:linear-gradient(180deg,rgba(2,6,23,0.6),rgba(2,6,23,0.85));display:none;align-items:center;justify-content:center;padding:18px}
+    .modal.open{display:flex}
+    .modal-card{max-width:1000px;width:100%;background:#021021;padding:20px;border-radius:14px;border:1px solid rgba(255,255,255,0.03)}
+
+    /* Responsive */
+    @media (max-width:900px){.grid{grid-template-columns:1fr}.projects{grid-template-columns:1fr}.avatar{width:74px;height:74px}}
   </style>
 </head>
-<body class="bg-gray-900 text-gray-100 font-sans">
+<body>
+  <div class="ribbon">Data Analytics Portfolio</div>
+  <div class="container">
+    <header>
+      <div class="avatar">MC</div>
+      <div>
+        <h1>Murphy Collins</h1>
+        <div class="sub">Senior Data Analyst — Power BI, SQL, Python, Excel • Kaduna, KD</div>
+        <div style="margin-top:8px" class="meta-row">
+          <span class="small-pill">6 years experience</span>
+          <span class="small-pill">Open to roles: Data Analyst / Analytics Engineer</span>
+          <span class="small-pill">Remote / Hybrid</span>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn" id="downloadResume">Download Resume</button>
+        <a class="outline" href="#contact">Contact</a>
+      </div>
+    </header>
 
-  <!-- Loader -->
-  <div id="loader">
-    <div class="gradient-text">MC</div>
-    <p class="text-gray-400 text-lg mt-4">Loading...</p>
+    <div class="grid">
+      <main>
+        <section class="card">
+          <h2 style="margin-top:0">Featured Projects</h2>
+          <p class="sub">Five case studies that showcase end-to-end analytics work: data engineering, modeling, visualization and measurable business impact.</p>
+
+          <div class="projects" id="projects"></div>
+        </section>
+
+        <section class="card" style="margin-top:18px">
+          <h3 style="margin-top:0">Interactive Demos</h3>
+          <p class="sub">Explore small interactive widgets and download sample datasets used in the case studies.</p>
+
+          <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:12px">
+            <div class="card" style="flex:1;min-width:240px">
+              <h4 style="margin:6px 0">Churn Score Distribution</h4>
+              <canvas id="churnChart" height="160"></canvas>
+              <div style="margin-top:8px"><button class="outline" id="downloadChurn">Download churn_sample.csv</button></div>
+            </div>
+
+            <div class="card" style="flex:1;min-width:240px">
+              <h4 style="margin:6px 0">Sales Forecast Preview</h4>
+              <canvas id="forecastChart" height="160"></canvas>
+              <div style="margin-top:8px"><button class="outline" id="downloadSales">Download sales_sample.csv</button></div>
+            </div>
+
+            <div class="card" style="flex:1;min-width:240px;margin-top:12px">
+              <h4 style="margin:6px 0">A/B Test Results</h4>
+              <canvas id="abChart" height="140"></canvas>
+            </div>
+
+            <div class="card" style="flex:1;min-width:240px;margin-top:12px">
+              <h4 style="margin:6px 0">Forecast — Store Level</h4>
+              <canvas id="storeForecast" height="140"></canvas>
+            </div>
+          </div>
+        </section>
+
+      </main>
+
+      <aside>
+        <div class="card">
+          <h4 style="margin-top:0">About — Snapshot</h4>
+          <p class="sub">Former teacher and Dean of Students turned Data Analyst with 6 years of experience. Strong in Power BI, Python, SQL, MySQL and Excel.</p>
+          <div style="margin-top:12px">
+            <div class="info-row"><span class="muted">Location</span><span>Kaduna, KD</span></div>
+            <div class="info-row"><span class="muted">Email</span><span>murphycollins@my.uopeople.edu</span></div>
+            <div class="info-row"><span class="muted">Phone</span><span>(+234) 7058888104</span></div>
+          </div>
+
+          <hr style="opacity:.06;margin:12px 0">
+          <h5 style="margin:6px 0">Top skills</h5>
+          <div class="skills">
+            <span class="tag">SQL</span><span class="tag">Python</span><span class="tag">Power BI</span><span class="tag">Excel</span><span class="tag">Tableau</span>
+          </div>
+
+        </div>
+
+        <div class="card" style="margin-top:16px">
+          <h4 style="margin-top:0">Metrics</h4>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+            <div><div class="sub">Automated reports saved</div><div class="stat">30 hours/month</div></div>
+            <div><div class="sub">Customer retention lift</div><div class="stat">25%</div></div>
+            <div><div class="sub">A/B uplift</div><div class="stat">+15%</div></div>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <footer>
+      <small>Built with HTML, CSS & JavaScript • Interactive charts use Chart.js • Ready for GitHub Pages</small>
+    </footer>
   </div>
 
-  <!-- Header -->
-  <header id="navbar" class="transparent fixed w-full top-0 z-50 transition duration-300" style="opacity:0;">
-    <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-      <h1 class="text-2xl font-bold gradient-text">Murphy Collins</h1>
-      <nav>
-        <a href="#about" class="nav-link mx-3 hover:text-teal-400">About</a>
-        <a href="#portfolio" class="nav-link mx-3 hover:text-teal-400">Portfolios</a>
-        <a href="#contact" class="nav-link mx-3 hover:text-teal-400">Contact</a>
-      </nav>
-    </div>
-  </header>
+  <div class="modal" id="modal"><div class="modal-card" id="modalCard"></div></div>
 
-  <!-- Hero Section -->
-  <section class="bg-gray-900 text-center py-28 fade-section">
-    <h2 class="text-4xl md:text-5xl font-bold mb-4">Welcome to My Portfolio</h2>
-    <p class="text-lg text-gray-400">Explore my work across multiple domains in tech</p>
-    <a href="#portfolio" class="mt-6 inline-block bg-teal-500 hover:bg-teal-600 text-white font-semibold px-6 py-3 rounded-lg">
-      Explore Portfolios
-    </a>
-  </section>
-
-  <!-- About Section -->
-  <section id="about" class="max-w-6xl mx-auto px-4 py-24 fade-section">
-    <h2 class="text-3xl font-bold shimmer mb-6">About Me</h2>
-    <p class="text-gray-300 leading-relaxed">
-      I am Murphy Collins, a versatile technology professional with expertise spanning software 
-      engineering, AI/ML, data analysis, and full-stack development.  
-      My mission is to design and build intelligent, scalable, and impactful digital solutions 
-      that bridge business needs with cutting-edge technology.
-    </p>
-  </section>
-
-  <!-- Portfolio Section -->
-  <section id="portfolio" class="max-w-6xl mx-auto px-4 py-24 fade-section">
-    <h2 class="text-3xl font-bold shimmer mb-6">Explore My Specialized Portfolios</h2>
-    <p class="text-gray-300 mb-8">Click a card to dive into my expertise areas.</p>
-
-    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-      <a href="python-developer/" class="card-hover block bg-gray-800 p-6 rounded-lg shadow">
-        <h3 class="text-xl font-semibold text-white">🐍 Python Developer</h3>
-        <p class="text-gray-400 mt-2">Advanced Python apps, automation, and backend solutions.</p>
-      </a>
-      <a href="java-developer/" class="card-hover block bg-gray-800 p-6 rounded-lg shadow">
-        <h3 class="text-xl font-semibold text-white">☕ Java Developer</h3>
-        <p class="text-gray-400 mt-2">Enterprise-level applications and object-oriented design.</p>
-      </a>
-      <a href="frontend-developer/" class="card-hover block bg-gray-800 p-6 rounded-lg shadow">
-        <h3 class="text-xl font-semibold text-white">🎨 Frontend Developer</h3>
-        <p class="text-gray-400 mt-2">Responsive and interactive web interfaces.</p>
-      </a>
-      <a href="backend-developer/" class="card-hover block bg-gray-800 p-6 rounded-lg shadow">
-        <h3 class="text-xl font-semibold text-white">⚙️ Backend Developer</h3>
-        <p class="text-gray-400 mt-2">APIs, databases, and server-side systems.</p>
-      </a>
-      <a href="ui-ux-developer/" class="card-hover block bg-gray-800 p-6 rounded-lg shadow">
-        <h3 class="text-xl font-semibold text-white">🎯 UI/UX Developer</h3>
-        <p class="text-gray-400 mt-2">User-centered design and engaging digital experiences.</p>
-      </a>
-      <a href="full-stack-developer/" class="card-hover block bg-gray-800 p-6 rounded-lg shadow">
-        <h3 class="text-xl font-semibold text-white">🖥️ Full Stack Developer</h3>
-        <p class="text-gray-400 mt-2">Complete end-to-end web solutions.</p>
-      </a>
-      <a href="software-engineer/" class="card-hover block bg-gray-800 p-6 rounded-lg shadow">
-        <h3 class="text-xl font-semibold text-white">💻 Software Engineer</h3>
-        <p class="text-gray-400 mt-2">Robust and scalable software development.</p>
-      </a>
-      <a href="data-scientist/" class="card-hover block bg-gray-800 p-6 rounded-lg shadow">
-        <h3 class="text-xl font-semibold text-white">📊 Data Scientist</h3>
-        <p class="text-gray-400 mt-2">Predictive analytics and machine learning.</p>
-      </a>
-      <a href="data-analyst/" class="card-hover block bg-gray-800 p-6 rounded-lg shadow">
-        <h3 class="text-xl font-semibold text-white">📈 Data Analyst</h3>
-        <p class="text-gray-400 mt-2">Dashboards, KPIs, and actionable insights.</p>
-      </a>
-      <a href="machine-learning-engineer/" class="card-hover block bg-gray-800 p-6 rounded-lg shadow">
-        <h3 class="text-xl font-semibold text-white">🤖 Machine Learning Engineer</h3>
-        <p class="text-gray-400 mt-2">Model training, optimization, and deployment.</p>
-      </a>
-      <!-- Updated AI Engineer card -->
-      <a href="https://murphycollins.github.io/ai-engineer.html" class="card-hover block bg-gray-800 p-6 rounded-lg shadow">
-        <h3 class="text-xl font-semibold text-white">🧠 AI Engineer</h3>
-        <p class="text-gray-400 mt-2">Intelligent AI systems and Fully Functional AI Prototypes.</p>
-      </a>
-      <a href="software-architect/" class="card-hover block bg-gray-800 p-6 rounded-lg shadow">
-        <h3 class="text-xl font-semibold text-white">🏗️ Software Architect</h3>
-        <p class="text-gray-400 mt-2">System design and enterprise architecture.</p>
-      </a>
-    </div>
-  </section>
-
-  <!-- Contact -->
-  <section id="contact" class="bg-gray-800 py-24 fade-section">
-    <div class="max-w-6xl mx-auto px-4 text-center">
-      <h2 class="text-3xl font-bold shimmer mb-6">Get in Touch</h2>
-      <p class="text-gray-400 mb-4">Feel free to connect with me for collaboration or opportunities.</p>
-      <p>Email: <a href="mailto:murphycollins@my.uopeople.edu" class="text-teal-400 hover:underline">murphycollins@my.uopeople.edu</a></p>
-      <p>GitHub: <a href="https://github.com/murphycollins" class="text-teal-400 hover:underline">github.com/murphycollins</a></p>
-      <p>Portfolio: <a href="https://murphycollins.github.io" class="text-teal-400 hover:underline">murphycollins.github.io</a></p>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="bg-gray-900 text-center py-6 fade-section">
-    <span class="text-gray-500">© 2025 <span class="gradient-text">Murphy Collins</span>. All rights reserved.</span>
-  </footer>
-
-  <!-- Back to Top Button -->
-  <button id="backToTop" onclick="window.scrollTo({top:0, behavior:'smooth'});">↑</button>
-
-  <!-- Scripts -->
   <script>
-    const sections = document.querySelectorAll("section");
-    const navLinks = document.querySelectorAll(".nav-link");
-    const navbar = document.getElementById("navbar");
-    const backToTop = document.getElementById("backToTop");
-    const fadeSections = document.querySelectorAll(".fade-section");
-    const loader = document.getElementById("loader");
+    const projects = [
+      {id:'p1',title:'Customer Churn Analysis & Retention Strategy',tag:'Churn Analysis',summary:'End-to-end churn analysis for a telco dataset: feature engineering, cohort analysis, survival curves, and actionable retention segments.',highlights:['Reduced churn by 25% via targeted retention campaign','Built logistic churn model and interpretability notes','Automated Power BI dashboard for live monitoring'],skills:['SQL','Python','Power BI','A/B Testing'],demo:true,github:'https://github.com/murphycollins/churn-analysis',sample:'churn_sample.csv'},
+      {id:'p2',title:'Sales Dashboard & Forecasting',tag:'Dashboard & Forecast',summary:'Interactive sales dashboard with time-series decomposition and 12-month forecast, including seasonality handling and promo effects.',highlights:['12-month revenue forecast with confidence intervals','ETL pipeline for daily sales ingestion','KPI-driven executive dashboard (Power BI)'],skills:['Excel','Power BI','Time Series','Python'],demo:true,github:'https://github.com/murphycollins/sales-forecasting',sample:'sales_sample.csv'},
+      {id:'p3',title:'A/B Test — Email Campaign Optimization',tag:'Experimentation',summary:'Designed and analyzed an A/B experiment for email subject lines; pre-registered analysis plan, power calculations, and lift estimation.',highlights:['15% conversion lift for winning variant','Bayesian and frequentist analysis','Recommendation playbook for rollout'],skills:['Experimentation','SQL','R/Python','Statistics'],demo:false,github:'https://github.com/murphycollins/ab-test-email',sample:'ab_sample.csv'},
+      {id:'p4',title:'Time Series — Demand Forecasting (Retail)',tag:'Forecasting',summary:'Demand forecasting model for multi-store retail using Prophet & ARIMA ensembles, with anomaly detection and replenishment signals.',highlights:['Reduced stockouts by 18%','Anomaly alerting integrated into dashboard','Forecast explained by promotions & holidays'],skills:['Python','Prophet','ARIMA','ETL'],demo:true,github:'https://github.com/murphycollins/retail-forecasting',sample:'store_forecast_sample.csv'},
+      {id:'p5',title:'Data Pipeline & Warehouse Migration',tag:'ETL & Warehousing',summary:'Led a migration from spreadsheets to a SQL data warehouse, designed star schema, and implemented incremental ETL jobs.',highlights:['Data access time reduced from hours to seconds','Designed KPIs and source-of-truth tables','Documentation and onboarding for analysts'],skills:['SQL','Data Modeling','ETL','Airflow'],demo:false,github:'https://github.com/murphycollins/warehouse-migration',sample:'warehouse_schema_example.txt'}
+    ];
 
-    window.addEventListener("scroll", () => {
-      let current = "";
-      sections.forEach((section) => {
-        const sectionTop = section.offsetTop - 100;
-        if (scrollY >= sectionTop) { current = section.getAttribute("id"); }
-      });
-
-      navLinks.forEach((link) => {
-        link.classList.remove("active-link");
-        if (link.getAttribute("href") === "#" + current) {
-          link.classList.add("active-link");
-        }
-      });
-
-      if (window.scrollY > 50) {
-        navbar.classList.remove("transparent");
-        navbar.classList.add("solid");
-      } else {
-        navbar.classList.remove("solid");
-        navbar.classList.add("transparent");
-      }
-
-      if (window.scrollY > 300) {
-        backToTop.classList.add("show");
-      } else {
-        backToTop.classList.remove("show");
-      }
-
-      fadeSections.forEach((sec) => {
-        const rect = sec.getBoundingClientRect();
-        if (rect.top < window.innerHeight - 100) { sec.classList.add("show"); }
-      });
+    const projectsContainer = document.getElementById('projects');
+    projects.forEach(p=>{
+      const el = document.createElement('div');
+      el.className='project-card';
+      el.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div>
+            <div style="font-weight:700">${p.title}</div>
+            <div class="sub" style="font-size:13px;margin-top:6px">${p.summary}</div>
+          </div>
+          <div style="text-align:right">
+            <div class="tag">${p.tag}</div>
+            <div style="margin-top:8px" class="sub">${p.skills.join(' • ')}</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button class="btn" onclick="openModal('${p.id}')">View case study</button>
+          <a class="outline" href="${p.github}" target="_blank">View code</a>
+        </div>
+      `;
+      projectsContainer.appendChild(el);
     });
 
-    window.addEventListener("load", () => {
-      loader.style.opacity = "0";
-      setTimeout(() => {
-        loader.style.display = "none";
-        document.getElementById("navbar").style.opacity = "1";
-      }, 600);
+    const modal = document.getElementById('modal');
+    const modalCard = document.getElementById('modalCard');
+    function openModal(id){
+      const p = projects.find(x=>x.id===id);
+      modalCard.innerHTML = `
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start">
+            <div>
+              <h3 style="margin:0">${p.title}</h3>
+              <div class="sub">${p.summary}</div>
+            </div>
+            <div style="text-align:right">
+              <a class="small-pill" href="${p.github}" target="_blank">View code</a>
+              <div style="margin-top:8px">${p.skills.map(s=>`<span class='tag' style='margin-left:6px'>${s}</span>`).join('')}</div>
+            </div>
+          </div>
+          <div>
+            <strong>Highlights</strong>
+            <ul>${p.highlights.map(h=>`<li>${h}</li>`).join('')}</ul>
+          </div>
+          <div style="display:flex;gap:8px">
+            <button class="btn" onclick="downloadSample('${p.sample}')">Download sample</button>
+            <button class="outline" onclick="closeModal()">Close</button>
+          </div>
+        </div>
+      `;
+      modal.classList.add('open');
+    }
+    function closeModal(){modal.classList.remove('open')}
+    modal.addEventListener('click',e=>{if(e.target===modal)closeModal()});
+
+    const sampleFiles = {
+      'churn_sample.csv': `customer_id,tenure,monthly_charges,churn\nC001,2,55.5,1\nC002,24,40.0,0\nC003,6,65.0,1\nC004,12,35.0,0\nC005,3,80.0,1`,
+      'sales_sample.csv': `date,store_id,sales,promo\n2024-01-01,store_1,3200,0\n2024-02-01,store_1,3600,1\n2024-03-01,store_1,3800,0\n2024-04-01,store_1,4100,0`,
+      'ab_sample.csv': `user_id,variant,converted\nU001,A,0\nU002,B,1\nU003,A,0\nU004,B,1\nU005,A,1`,
+      'store_forecast_sample.csv': `date,store_id,forecast,upper,lower\n2024-09-01,store_1,4200,4500,3900\n2024-10-01,store_1,4400,4700,4100`,
+      'warehouse_schema_example.txt': `STAR_SCHEMA:\nDIM_CUSTOMER(customer_id, name, region)\nDIM_DATE(date_id, date, month, year)\nFACT_SALES(sale_id, date_id, customer_id, store_id, amount)`
+    };
+
+    function downloadSample(filename){
+      const data = sampleFiles[filename];
+      if(!data) return alert('Sample not found');
+      const blob = new Blob([data],{type:'text/csv;charset=utf-8;'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = filename; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    }
+
+    const churnCtx = document.getElementById('churnChart').getContext('2d');
+    const churnData = {labels:['0-10%','10-20%','20-30%','30-40%','40%+'],datasets:[{label:'Customers',data:[1200,900,450,180,60],tension:0.3}]};
+    new Chart(churnCtx,{type:'bar',data:churnData,options:{plugins:{legend:{display:false}}}});
+
+    const forecastCtx = document.getElementById('forecastChart').getContext('2d');
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const sales = [3200,3600,3800,4100,4200,4600,4800,5100,5300,5600,5900,6200];
+    new Chart(forecastCtx,{type:'line',data:{labels:months,datasets:[{label:'Sales',data:sales,fill:true,tension:0.3}]},options:{plugins:{legend:{display:false}}}});
+
+    const abCtx = document.getElementById('abChart').getContext('2d');
+    new Chart(abCtx,{type:'pie',data:{labels:['Converted','Not converted'],datasets:[{data:[120,380]}]},options:{plugins:{legend:{position:'bottom'}}}});
+
+    const storeCtx = document.getElementById('storeForecast').getContext('2d');
+    new Chart(storeCtx,{type:'bar',data:{labels:['Sep','Oct','Nov'],datasets:[{label:'Store 1 Forecast',data:[4200,4400,4600]}]},options:{plugins:{legend:{display:false}}}});
+
+    document.getElementById('downloadResume').addEventListener('click',()=>{
+      downloadSample('murphy_collins_resume.csv');
     });
+
+    sampleFiles['murphy_collins_resume.csv'] = `name,email,phone,location\nMurphy Collins,murphycollins@my.uopeople.edu,(+234)7058888104,Kaduna`;
+
+    window.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
   </script>
-
 </body>
 </html>

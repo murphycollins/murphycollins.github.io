@@ -1,0 +1,4 @@
+STAR_SCHEMA:
+DIM_CUSTOMER(customer_id, name, region)
+DIM_DATE(date_id, date, month, year)
+FACT_SALES(sale_id, date_id, customer_id, store_id, amount)

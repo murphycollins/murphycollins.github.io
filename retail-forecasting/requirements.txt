@@ -1,0 +1,6 @@
+pandas
+prophet
+statsmodels
+matplotlib
+seaborn
+jupyter

@@ -1,1 +1,224 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Murphy Collins | Virtual Assistant Portfolio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // Dark mode toggle persistence
+    if (localStorage.theme === 'dark' || 
+        (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
+</head>
+<body class="bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-200 transition-colors duration-300">
+
+  <!-- Navbar -->
+  <nav class="fixed top-0 w-full bg-white dark:bg-gray-800 shadow-md z-50">
+    <div class="max-w-6xl mx-auto px-6 flex justify-between items-center py-4">
+      <h1 class="text-xl font-bold text-indigo-600 dark:text-indigo-400">Murphy Collins</h1>
+      <ul class="hidden md:flex space-x-6">
+        <li><a href="#about" class="hover:text-indigo-600 dark:hover:text-indigo-400">About</a></li>
+        <li><a href="#services" class="hover:text-indigo-600 dark:hover:text-indigo-400">Services</a></li>
+        <li><a href="#skills" class="hover:text-indigo-600 dark:hover:text-indigo-400">Skills</a></li>
+        <li><a href="#experience" class="hover:text-indigo-600 dark:hover:text-indigo-400">Experience</a></li>
+        <li><a href="#projects" class="hover:text-indigo-600 dark:hover:text-indigo-400">Projects</a></li>
+        <li><a href="#cv" class="hover:text-indigo-600 dark:hover:text-indigo-400">CV</a></li>
+        <li><a href="#contact" class="hover:text-indigo-600 dark:hover:text-indigo-400">Contact</a></li>
+      </ul>
+      <!-- Dark mode button -->
+      <button id="darkToggle" class="ml-4 bg-indigo-600 text-white px-3 py-1 rounded-md text-sm">
+        🌙 Toggle
+      </button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="h-screen flex items-center justify-center bg-gradient-to-r from-indigo-500 to-purple-600 text-white">
+    <div class="text-center px-6">
+      <h2 class="text-4xl md:text-6xl font-bold mb-4">Your Reliable Virtual Assistant</h2>
+      <p class="text-lg md:text-xl mb-6">Helping businesses streamline operations, manage data, and stay ahead — with a touch of AI.</p>
+      <div class="space-x-4">
+        <a href="#contact" class="bg-white text-indigo-600 font-semibold px-6 py-3 rounded-lg shadow hover:bg-gray-200">Hire Me</a>
+        <a href="Murphy_Collins_VA_CV.pdf" download class="bg-gray-900 text-white font-semibold px-6 py-3 rounded-lg shadow hover:bg-gray-800">Download CV</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section id="about" class="max-w-6xl mx-auto px-6 py-16">
+    <h3 class="text-3xl font-bold mb-6 text-indigo-600 dark:text-indigo-400">About Me</h3>
+    <p class="text-lg leading-relaxed">
+      I’m Murphy Collins, a versatile professional with 6+ years of experience spanning data analytics, software engineering, and virtual assistant services. 
+      From managing operations to building intelligent tools, I help businesses focus on growth while I handle the rest.
+    </p>
+  </section>
+
+  <!-- Services -->
+  <section id="services" class="bg-gray-100 dark:bg-gray-800 py-16 px-6">
+    <div class="max-w-6xl mx-auto">
+      <h3 class="text-3xl font-bold mb-8 text-indigo-600 dark:text-indigo-400">Services</h3>
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow hover:shadow-lg">
+          <h4 class="text-xl font-semibold mb-4">Administrative Support</h4>
+          <p>Inbox & calendar management, document organization, scheduling, and communication support.</p>
+        </div>
+        <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow hover:shadow-lg">
+          <h4 class="text-xl font-semibold mb-4">Data & Research</h4>
+          <p>Market research, reporting, spreadsheet automation, and data visualization for smart decisions.</p>
+        </div>
+        <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow hover:shadow-lg">
+          <h4 class="text-xl font-semibold mb-4">Tech-Savvy Assistance</h4>
+          <p>AI tools integration, website support, basic coding, and dashboards to save you time and effort.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills -->
+  <section id="skills" class="max-w-6xl mx-auto px-6 py-16">
+    <h3 class="text-3xl font-bold mb-6 text-indigo-600 dark:text-indigo-400">Core Skills</h3>
+    <ul class="grid grid-cols-2 md:grid-cols-3 gap-4 text-lg">
+      <li>Inbox & Calendar Management</li>
+      <li>Data Analysis & Reporting</li>
+      <li>Project Coordination</li>
+      <li>CRM & Tools (Notion, Trello, Asana)</li>
+      <li>Microsoft Office & Google Workspace</li>
+      <li>Research & Documentation</li>
+    </ul>
+  </section>
+
+  <!-- Experience -->
+  <section id="experience" class="bg-gray-100 dark:bg-gray-800 py-16 px-6">
+    <div class="max-w-6xl mx-auto">
+      <h3 class="text-3xl font-bold mb-8 text-indigo-600 dark:text-indigo-400">Experience</h3>
+      <div class="space-y-6">
+        <div>
+          <h4 class="text-xl font-semibold">Virtual Assistant / Data & AI Engineer — Harrifmoore Energy</h4>
+          <p class="text-sm text-gray-600 dark:text-gray-400">July 2024 – Present</p>
+          <p>Managed reporting dashboards, supported client relations, and coordinated scheduling & documentation.</p>
+        </div>
+        <div>
+          <h4 class="text-xl font-semibold">Business & Software Analyst — Harrifmoore Ventures</h4>
+          <p class="text-sm text-gray-600 dark:text-gray-400">Feb 2023 – Jun 2024</p>
+          <p>Redesigned reporting systems, conducted market research, and supported executives with admin tasks.</p>
+        </div>
+        <div>
+          <h4 class="text-xl font-semibold">Operations & Back-End Analyst — Bridgeport Tech (Remote)</h4>
+          <p class="text-sm text-gray-600 dark:text-gray-400">Dec 2021 – Jan 2023</p>
+          <p>Provided executive reports, coordinated operations across time zones, and supported backend workflows.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects -->
+  <section id="projects" class="max-w-6xl mx-auto px-6 py-16">
+    <h3 class="text-3xl font-bold mb-6 text-indigo-600 dark:text-indigo-400">Highlighted Projects</h3>
+    <div class="grid md:grid-cols-2 gap-8">
+      <div class="p-6 border rounded-lg shadow hover:shadow-lg dark:bg-gray-700">
+        <h4 class="font-semibold text-xl mb-2">AI Chatbot for Customer Support</h4>
+        <p>Developed a natural language chatbot to improve response times and client satisfaction.</p>
+      </div>
+      <div class="p-6 border rounded-lg shadow hover:shadow-lg dark:bg-gray-700">
+        <h4 class="font-semibold text-xl mb-2">Customer Churn Analysis</h4>
+        <p>Created retention strategies from predictive models, helping businesses save clients.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CV Section -->
+  <section id="cv" class="bg-white dark:bg-gray-900 py-16 px-6">
+    <div class="max-w-6xl mx-auto">
+      <h3 class="text-3xl font-bold mb-8 text-indigo-600 dark:text-indigo-400 text-center">Curriculum Vitae</h3>
+      
+      <!-- Cards -->
+      <div class="space-y-10">
+        <div class="p-6 rounded-lg shadow bg-gray-50 dark:bg-gray-800">
+          <h4 class="text-2xl font-semibold text-indigo-700 dark:text-indigo-300 mb-4">Professional Summary</h4>
+          <p>Reliable and detail-oriented <strong>Virtual Assistant</strong> with 6+ years of experience supporting executives, managing operations, and streamlining workflows...</p>
+        </div>
+        <div class="p-6 rounded-lg shadow bg-gray-50 dark:bg-gray-800">
+          <h4 class="text-2xl font-semibold text-indigo-700 dark:text-indigo-300 mb-4">Core Competencies</h4>
+          <ul class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <li>✔ Inbox & Calendar Management</li>
+            <li>✔ Scheduling & Task Coordination</li>
+            <li>✔ Research & Documentation</li>
+            <li>✔ Data Entry & Reporting</li>
+            <li>✔ Microsoft Office & Google Workspace</li>
+            <li>✔ CRM & Project Tools (Asana, Trello, Notion)</li>
+            <li>✔ Communication & Client Support</li>
+            <li>✔ Tech-Savvy Assistance (Automation, AI Tools, Websites)</li>
+          </ul>
+        </div>
+        <div class="p-6 rounded-lg shadow bg-gray-50 dark:bg-gray-800">
+          <h4 class="text-2xl font-semibold text-indigo-700 dark:text-indigo-300 mb-4">Professional Experience</h4>
+          <ul class="space-y-4">
+            <li><strong>Harrifmoore Energy</strong> – Virtual Assistant / Data & AI Engineer (2024–Present)</li>
+            <li><strong>Harrifmoore Ventures</strong> – Business & Software Analyst (2023–2024)</li>
+            <li><strong>Bridgeport Tech</strong> – Operations Analyst (2021–2023)</li>
+          </ul>
+        </div>
+        <div class="p-6 rounded-lg shadow bg-gray-50 dark:bg-gray-800">
+          <h4 class="text-2xl font-semibold text-indigo-700 dark:text-indigo-300 mb-4">Highlighted Projects</h4>
+          <ul class="list-disc list-inside space-y-2">
+            <li>AI Chatbot for Customer Support – Improved client response efficiency</li>
+            <li>Customer Churn Analysis – Achieved 85% accuracy for retention insights</li>
+            <li>E-Commerce Dashboard – Simplified sales & customer tracking</li>
+          </ul>
+        </div>
+        <div class="p-6 rounded-lg shadow bg-gray-50 dark:bg-gray-800">
+          <h4 class="text-2xl font-semibold text-indigo-700 dark:text-indigo-300 mb-4">Education</h4>
+          <p>B.Sc. & A.Sc. in Computer Science – University of the People</p>
+        </div>
+        <div class="p-6 rounded-lg shadow bg-gray-50 dark:bg-gray-800">
+          <h4 class="text-2xl font-semibold text-indigo-700 dark:text-indigo-300 mb-4">Certifications</h4>
+          <ul class="list-disc list-inside space-y-2">
+            <li>Google Data Analytics Professional Certificate</li>
+            <li>Google Advanced Data Analytics Certificate</li>
+            <li>AI-Enhanced Data Analysis</li>
+            <li>(Planned: AWS Solutions Architect, TensorFlow Certificate)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="bg-indigo-600 text-white py-16 px-6">
+    <div class="max-w-4xl mx-auto text-center">
+      <h3 class="text-3xl font-bold mb-6">Let’s Work Together</h3>
+      <p class="mb-6">Looking for a reliable virtual assistant who blends administrative excellence with tech skills? Let’s connect!</p>
+      <p>📧 murphycollins@my.uopeople.edu | 📱 (+234) 705-888-8104</p>
+      <p>🌐 <a href="https://murphycollins.github.io" class="underline">murphycollins.github.io</a></p>
+      <p>💼 <a href="https://github.com/murphycollins" class="underline">GitHub Profile</a></p>
+    </div>
+  </section>
+
+  <!-- Floating CV Button -->
+  <a href="Murphy_Collins_VA_CV.pdf" download
+     class="fixed bottom-6 right-6 bg-indigo-600 text-white font-semibold px-5 py-3 rounded-full shadow-lg hover:bg-indigo-700 transition">
+    📄 Download CV
+  </a>
+
+  <footer class="bg-gray-900 text-gray-400 py-4 text-center">
+    <p>&copy; 2025 Murphy Collins. All rights reserved.</p>
+  </footer>
+
+  <script>
+    document.getElementById("darkToggle").addEventListener("click", () => {
+      document.documentElement.classList.toggle("dark");
+      if (document.documentElement.classList.contains("dark")) {
+        localStorage.theme = "dark";
+      } else {
+        localStorage.theme = "light";
+      }
+    });
+  </script>
+</body>
+</html>
 

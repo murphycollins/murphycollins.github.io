@@ -1,0 +1,4 @@
+body {font-family: Arial, sans-serif;text-align:center;padding:2rem;transition:0.5s;}
+.dark {background:#0f172a;color:#f8fafc;}
+.light {background:#ffffff;color:#0f172a;}
+button {padding:0.7rem 1.2rem;margin-top:1rem;font-weight:bold;cursor:pointer;}
